@@ -1,0 +1,16 @@
+hallar los datos
+
+comparar el valor obtenido con el primer dato del arreglo de arreglos
+
+cuando se halle el valor correspondiente simplemente comparar con el resto del arreglo,
+si se encuentra que no son los mismos, imprimir se esperaba mas el valor del arreglo,
+
+# trabjar en una funcion recursiva?
+# que sucede cuando hay un error
+# crear una funcion que avance hacia adelante
+
+
+semantico
+# detectar los tipos de datos
+# detectar si las funciones estan declaradas
+# 

@@ -1,0 +1,64 @@
+
+# descontinuado
+
+#pp final = trans.apply(parser.parse("-> if a > 4: then a = 3 } >|"))
+# final.each do |key,value|
+#   puts "#{key}:#{value}"
+# end
+# puts 'hash nav'
+# final.each do |key, array|
+#   puts '#{key}------'
+#   puts array
+# end
+
+
+=begin
+# objetos para trabajo
+class Symbols_Table
+  def new
+    tabla = Hash.new
+  end
+
+  def agregar_scope(nombre)
+    tabla[nombre]
+  end
+
+=end
+
+# primer intento de ramas
+
+# rule(
+#   :declaracion => 'declarar'
+#   :llave => simple(:llave), :tipoDato =>simple(:tipoDato), :valor => simple(:valor))    { $simbolos_declarados.push(Declarar.new(llave, tipoDato, valor)) } #tabla de simbolos
+
+# primer intento por metodos
+# Declarar = Struct.new(:llave, :tipoDato, :valor) do
+#   dato = {llave, tipoDato, valor}
+# end
+
+=begin
+ def parse(str)
+   own = MyOwn.new
+   own.parse(str)
+ rescue Parslet::ParseFailed => failure
+   puts failure.cause.ascii_tree
+ end
+
+ parse "-> if a > 4: then a = 3 } >|"
+  # parse "er34sda >= a:"
+  # parse ">= "
+=end
+
+
+def cambio_bloque(bloque)
+
+  @bloque_actual = $tablas_simbolos[@bloques]
+  padre = @bloque_actual[:nombre]
+
+  if $tablas_simbolos[@bloques].is_a?(NilClass)
+    $tablas_simbolos[@bloques]={:clase => bloque.keys[0], :padre => padre}
+  else
+    $tablas_simbolos[@bloques]=$tablas_simbolos[@bloques].merge({:clase => bloque.keys[0], :padre => padre})
+  end
+  @bloques +=1
+end
