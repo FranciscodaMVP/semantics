@@ -89,6 +89,7 @@ class MyOwn < Parslet::Parser
   rule(:importa)      { str('import') >>  espacio?  }
   rule(:para)         { str('for')    >>  espacio?  }
   rule(:rango)        { str('range')  >>  espacio?  }
+  rule(:funcion)      { str('funky')  >>  espacio?  }
   rule(:en)           { str('in')     >>  espacio?  }
 #  rule(:)
 
@@ -109,6 +110,7 @@ class MyOwn < Parslet::Parser
   rule(:tiposrango)   { (tipoDato  | tipoDato)  >>  (coma  >>  tipoDato).repeat(1)  }
   rule(:rangos)       { tiposrango  | arreglo   }
   rule(:rangoF)       { rangos >>  dosPuntos  }
+  rule(:params)       { identificador >>  (coma  >>  params).maybe  }
 #BLOQUE?rule(:condicion)    { identificador | entero  >>  (bloque >> pYc).as(:instruccion)  >>  }
 # el bloque tiene que estar lleno de todas las condiciones
 
@@ -120,10 +122,12 @@ class MyOwn < Parslet::Parser
   rule(:instWhile)    { mientras  >>  condicionF  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque) }
   rule(:instImport)   { importa >>  identificador }
   rule(:instPara)     { para  >>  identificador >>  en  >>  rangoF  >>  bloque  >>  llaveDer.as(:finBloque)}
+  rule(:instFunc)     { funcion >>  identificador >>  parenIz  >>  params.maybe  >>  parenDer  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque)}
   #bloque de codigo (DEFINIR BLOQUE)
   #rule(:bloque)       { (declaracion.as(:declaracion)  |  instSi.as(:siTest)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  | instPara.as(:para)) }
 
-  rule(:bloque)       { (declaracion.as(:declaracion)  |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  | instPara.as(:para)  | expresion.as(:bloqueExpresion)) }
+  rule(:bloque)       { ( instFunc.as(:bloqueFuncion) | declaracion.as(:bloqueDeclaracion)  |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
+    instPara.as(:para)  | expresion.as(:bloqueExpresion)) }
 
   #main
   rule(:bloques)      { bloque.as(:wat)  >>  bloques.maybe.as(:fuck) }
@@ -178,7 +182,7 @@ class Semantics
   def initialize (lista)
     @lista=lista
     @bloques = 0
-
+    @padre_root = 'main'
     $tablas_simbolos = Hash.new
     $tablas_simbolos['main']={:nombre => 'main', :padre => nil}
     @bloque_actual = $tablas_simbolos['main']
@@ -200,32 +204,61 @@ class Semantics
 
   end
 
-
   def evalua_llave(llave, valor)
-    padre = @bloque_actual[:nombre]
-    puts 'evalua'
-    puts (llave)
-    puts (valor)
+    @padre = @padre_root
+    # puts 'evalua llave UFCK'
+    # pp (llave)
+    # padre = @bloque_actual[:nombre]
     if llave == :bloqueSi
-      a = {:nombre => @bloques,:clase => valor.keys[0], :padre => padre}
+      # a = {:nombre => @bloques,:clase => valor.keys[0], :padre => padre}
+      a = {:nombre => @bloques,:clase => 'if', :padre => @padre}
         $tablas_simbolos[@bloques]=a
         @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
+      # puts 'bloque actual'
+      # puts @bloque_actual
+      # puts (@bloque_actual[:nombre])
+      @padre_root = @bloque_actual[:nombre]
     end
 
   	if llave == :bloqueDeclaracion
-      a = {:nombre => @bloques, :variable => valor[:declaracion].keys[0], :tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => padre}
+      a = {:nombre => @bloques, :variable => valor[:declaracion].keys[0], :tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => @padre}
   			$tablas_simbolos[@bloques]= a
         @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
   	end
 
-    if llave == :bloqueExpresion
-      a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => padre, :izq => valor[:izq], :der => valor[:der] }
+    # if llave == :bloqueExpresion
+    #   a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => padre, :izq => valor[:izq], :der => valor[:der] }
+    #     $tablas_simbolos[@bloques]=a
+    #     @bloque_actual = $tablas_simbolos[@bloques]
+    #   @bloques +=1
+    # end
+
+    if llave == :clase
+      a = {:nombre => @bloques, :clase =>'clase', :padre => @padre, :variable =>valor[:id]}
         $tablas_simbolos[@bloques]=a
         @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
+      @padre_root = @bloque_actual[:nombre]
     end
+
+    if llave == :finBloque
+      # a = {:nombre => @bloques, :clase =>'fuck', :padre => @padre}
+      #   $tablas_simbolos[@bloques]=a
+      #   @bloque_actual = $tablas_simbolos[@bloques]
+      # @bloques +=1
+      @padre_root = 'main'
+    end
+
+
+    # Recuerda nada mas hay que checar que la variable este guardada en el arbol de simbolos
+    # if llave == :identi
+    #   a = {:nombre => @bloques, :clase =>'identi', :padre => @padre, :variable =>valor}
+    #     $tablas_simbolos[@bloques]=a
+    #     @bloque_actual = $tablas_simbolos[@bloques]
+    #   @bloques +=1
+    # end
   end
 #al terminar convertir el bloque actual al padre
 end
