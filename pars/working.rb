@@ -43,8 +43,8 @@ class MyOwn < Parslet::Parser
   rule(:opLogicos)  { (distinto  |  mayorigual  | menorIgual  | mayorQue  | menorQue).as(:opLL) >>  espacio? }
 
 # expresion
-  rule(:operacion)      { (entero  | flotante).as(:izq)  >>  operador.as(:op)	>>	expresion.as(:der)  }
-  rule(:listaArg)	{	expreson >>	(coma	>> expresion).repeat	}
+  rule(:operacion)  { (tipoDato).as(:izq)  >>  operador.as(:op)	>>	expresion.as(:der)  }
+  rule(:listaArg)	  {	expresion >>	(coma	>> expresion).repeat	}
   rule(:funcionLla)	{	identificador.as(:funcionLla)	>>	parenIz	>>	listaArg.as(:listaArg)	>>	parenDer}
   rule(:expresion)  {  funcionLla	| operacion	|	tipoDato }
 
@@ -65,13 +65,14 @@ class MyOwn < Parslet::Parser
 
     #tipos de datos (AGREGAR MAS TIPOS DE DATOS?)
   rule(:digito)         { match('[0-9]').repeat(1)  }
-  rule(:entero)         { (digito  >> digito.repeat(0)).as(:entero) >>  espacio?  }
-  rule(:flotante)       { (entero  >>  punto >>  entero).as(:flotante)  >>  espacio? }
+  rule(:entero)         { (digito  >> digito.repeat(0)) >>  espacio?  }
+  rule(:flotante)       { entero  >>  punto >>  entero }
+  rule(:flotis)         { flotante >> espacio? }
   rule(:cadena)         { comillas  >>  (match('[^;\r\n]').repeat(1)  >>  match('[^;\r\n]').repeat(0)) >> comillas  }
   rule(:identificador)  { (match['a-zA-z'].repeat(1) >>  match('\w').repeat(0)).as(:id) >> espacio?  }
   #tipo dato
   #rule(:tipoDato)       { flotante.as(:flotante)  | entero  | cadena.as(:cadena)  | identificador.as(:identificador) }
-  rule(:tipoDato)       { flotante  | entero  | cadena  | identificador }
+  rule(:tipoDato)       { flotis.as(:flotante)  | entero.as(:entero)  | cadena.as(:cadena)  | identificador.as(:identi) }
 
   rule(:llave)          { identificador  >>  espacio? >>  igual >> espacio? }
 
@@ -88,6 +89,7 @@ class MyOwn < Parslet::Parser
   rule(:importa)      { str('import') >>  espacio?  }
   rule(:para)         { str('for')    >>  espacio?  }
   rule(:rango)        { str('range')  >>  espacio?  }
+  rule(:funcion)      { str('funky')  >>  espacio?  }
   rule(:en)           { str('in')     >>  espacio?  }
 #  rule(:)
 
@@ -108,6 +110,7 @@ class MyOwn < Parslet::Parser
   rule(:tiposrango)   { (tipoDato  | tipoDato)  >>  (coma  >>  tipoDato).repeat(1)  }
   rule(:rangos)       { tiposrango  | arreglo   }
   rule(:rangoF)       { rangos >>  dosPuntos  }
+  rule(:params)       { identificador >>  (coma  >>  params).maybe  }
 #BLOQUE?rule(:condicion)    { identificador | entero  >>  (bloque >> pYc).as(:instruccion)  >>  }
 # el bloque tiene que estar lleno de todas las condiciones
 
@@ -119,10 +122,13 @@ class MyOwn < Parslet::Parser
   rule(:instWhile)    { mientras  >>  condicionF  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque) }
   rule(:instImport)   { importa >>  identificador }
   rule(:instPara)     { para  >>  identificador >>  en  >>  rangoF  >>  bloque  >>  llaveDer.as(:finBloque)}
+  rule(:instFunc)     { funcion >>  identificador >>  parenIz  >>  params.maybe  >>  parenDer  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque)}
   #bloque de codigo (DEFINIR BLOQUE)
   #rule(:bloque)       { (declaracion.as(:declaracion)  |  instSi.as(:siTest)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  | instPara.as(:para)) }
-  rule(:bloque)       {	(declaracion.as(:bloqueDeclaracion)  |  instSi.as(:bloqueSi)  | instClase.as(:bloqueClase) | instDo.as(:bloqueDo)  | instWhile.as(:bloqueWhile) | instImport  | instPara.as(:bloqueFor)|expresion.as(:bloqueExpresion)) }
-  #rule(:bloque)       { expresion.as(:bloqueExpresion)	}
+
+  rule(:bloque)       { ( instFunc.as(:bloqueFuncion) | declaracion.as(:bloqueDeclaracion)  |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
+    instPara.as(:para)  | expresion.as(:bloqueExpresion)) }
+
   #main
   rule(:bloques)      { bloque.as(:wat)  >>  bloques.maybe.as(:fuck) }
   rule(:instruccion)       { inicio.as(:inicio) >>  bloques  >>  fin.as(:fin) }
@@ -163,12 +169,8 @@ end
 
 #parse("-> if a >= 4: then a = 3 } >|")
 #parse("-> if a >= 4: then a = 3 } >|")
-
 #pp
 #parseo = parser.parse("-> 4 + 66 >|")
-
-#pp
-
 
 #Objeto
 class Semantics
@@ -176,10 +178,12 @@ class Semantics
   def initialize (lista)
     @lista=lista
     @bloques = 0
-
+    @padre_root = 0
     $tablas_simbolos = Hash.new
     $tablas_simbolos['main']={:nombre => 'main', :padre => nil}
     @bloque_actual = $tablas_simbolos['main']
+    puts 'bloque inicial'
+    pp @bloque_actual
   end
 
   def recorrer_arbol(arbol)
@@ -198,29 +202,61 @@ class Semantics
 
   end
 
-
   def evalua_llave(llave, valor)
-    padre = @bloque_actual[:nombre]
+    @padre = @padre_root
+    # puts 'evalua llave UFCK'
+    # pp (@padre)
+    # padre = @bloque_actual[:nombre]
     if llave == :bloqueSi
-      a = {:nombre => @bloques,:clase => valor.keys[0], :padre => padre}
+      puts '\n\nbloque actuable n SI\n\n'
+      pp @bloque_actual
+      a = {:nombre => @bloques,:clase => 'if', :padre => @padre}
         $tablas_simbolos[@bloques]=a
         @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
+      @padre_root = @bloque_actual[:nombre]
+      pp 'padre root'
+      pp @padre_root
     end
 
   	if llave == :bloqueDeclaracion
-      a = {:nombre => @bloques, :variable => valor[:declaracion].keys[0], :tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => padre}
-  			$tablas_simbolos[@bloques]= a
-        @bloque_actual = $tablas_simbolos[@bloques]
+      # a = {:nombre => @bloques, :variable => valor[:declaracion].keys[0], :tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => @padre}
+      a = {:tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => @padre, :nombre => valor[:declaracion].keys[0], :numero => @bloques}
+        @bloque_actual[valor[:declaracion].keys[0]]= a
+        pp 'bloque actual y llave'
+        pp [valor[:declaracion].keys[0]]
+        pp @bloque_actual
+        # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
   	end
 
-    if llave == :bloqueExpresion
-      a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => padre, :izq => valor[:izq], :der => valor[:der] }
+    # if llave == :bloqueExpresion
+    #   a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => padre, :izq => valor[:izq], :der => valor[:der] }
+    #     $tablas_simbolos[@bloques]=a
+    #     @bloque_actual = $tablas_simbolos[@bloques]
+    #   @bloques +=1
+    # end
+
+    if llave == :clase
+      a = {:nombre => @bloques, :clase =>'clase', :padre => @padre, :variable =>valor[:id]}
         $tablas_simbolos[@bloques]=a
-        @bloque_actual = $tablas_simbolos[@bloques]
+        # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
+      @padre_root = @bloque_actual[:nombre]
     end
+
+    if llave == :finBloque
+      pp 'final del bloque'
+      pp $tablas_simbolos[@padre_root]
+      @bloque_actual = $tablas_simbolos['main']
+    end
+    # Recuerda nada mas hay que checar que la variable este guardada en el arbol de simbolos
+    # if llave == :identi
+    #   a = {:nombre => @bloques, :clase =>'identi', :padre => @padre, :variable =>valor}
+    #     $tablas_simbolos[@bloques]=a
+    #     @bloque_actual = $tablas_simbolos[@bloques]
+    #   @bloques +=1
+    # end
   end
 #al terminar convertir el bloque actual al padre
 end
@@ -228,28 +264,20 @@ end
 # pruebas hashing
 # puts 'fetch'
 #  puts final.fetch(:bloqueDeclaracion).keys[0]
-
+=begin
 cadena =''
 File.open("algo.txt", "r") do |t|
   t.each_line do |line|
     cadena += line
   end
 end
-
-puts cadena
-
-#puts 'debugger'
-#parse (cadena)
-
-parseo = parser.parse(cadena)
+--parseo = parser.parse(cadena)
 #pp parseo = parser.parse(cadena)
 pp final = trans.apply(parseo)
-
-puts 'arbol- recorrido'
+--puts 'arbol- recorrido'
 sem = Semantics.new(final)
 sem.recorrer_arbol(final)
 puts 'fin recorrido'
-
-puts 'Tabla de Simbolos : '
-
+--puts 'Tabla de Simbolos : '
  pp $tablas_simbolos
+=end

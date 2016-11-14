@@ -169,12 +169,8 @@ end
 
 #parse("-> if a >= 4: then a = 3 } >|")
 #parse("-> if a >= 4: then a = 3 } >|")
-
 #pp
 #parseo = parser.parse("-> 4 + 66 >|")
-
-#pp
-
 
 #Objeto
 class Semantics
@@ -182,10 +178,12 @@ class Semantics
   def initialize (lista)
     @lista=lista
     @bloques = 0
-    @padre_root = 'main'
+    @padre = 'main'
     $tablas_simbolos = Hash.new
     $tablas_simbolos['main']={:nombre => 'main', :padre => nil}
     @bloque_actual = $tablas_simbolos['main']
+    puts 'bloque inicial'
+    pp @bloque_actual
   end
 
   def recorrer_arbol(arbol)
@@ -201,57 +199,52 @@ class Semantics
           evalua_llave(key,value)
         end
       end
-
   end
 
   def evalua_llave(llave, valor)
-    @padre = @padre_root
+    #@padre = @padre_root
     # puts 'evalua llave UFCK'
-    # pp (llave)
+    # pp (@padre)
     # padre = @bloque_actual[:nombre]
     if llave == :bloqueSi
-      # a = {:nombre => @bloques,:clase => valor.keys[0], :padre => padre}
       a = {:nombre => @bloques,:clase => 'if', :padre => @padre}
         $tablas_simbolos[@bloques]=a
         @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
-      # puts 'bloque actual'
-      # puts @bloque_actual
-      # puts (@bloque_actual[:nombre])
-      @padre_root = @bloque_actual[:nombre]
+      @padre = @bloque_actual[:nombre]
+      # pp 'padre root'
+      # pp @padre
     end
 
   	if llave == :bloqueDeclaracion
-      a = {:nombre => @bloques, :variable => valor[:declaracion].keys[0], :tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => @padre}
-  			$tablas_simbolos[@bloques]= a
-        @bloque_actual = $tablas_simbolos[@bloques]
+      a = {:tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => @padre, :nombre => valor[:declaracion].keys[0], :numero => @bloques}
+        @bloque_actual[valor[:declaracion].keys[0]]= a
+        pp 'bloque actual y llave'
+        pp [valor[:declaracion].keys[0]]
+        pp @bloque_actual
+        # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
   	end
-
     # if llave == :bloqueExpresion
     #   a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => padre, :izq => valor[:izq], :der => valor[:der] }
     #     $tablas_simbolos[@bloques]=a
     #     @bloque_actual = $tablas_simbolos[@bloques]
     #   @bloques +=1
     # end
-
     if llave == :clase
       a = {:nombre => @bloques, :clase =>'clase', :padre => @padre, :variable =>valor[:id]}
         $tablas_simbolos[@bloques]=a
-        @bloque_actual = $tablas_simbolos[@bloques]
+        # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
-      @padre_root = @bloque_actual[:nombre]
+      @padre = @bloque_actual[:nombre]
     end
 
     if llave == :finBloque
-      # a = {:nombre => @bloques, :clase =>'fuck', :padre => @padre}
-      #   $tablas_simbolos[@bloques]=a
-      #   @bloque_actual = $tablas_simbolos[@bloques]
-      # @bloques +=1
-      @padre_root = 'main'
+      @padre = 'main'
+      pp 'final del bloque'
+      pp @padre
+      @bloque_actual = $tablas_simbolos['main']
     end
-
-
     # Recuerda nada mas hay que checar que la variable este guardada en el arbol de simbolos
     # if llave == :identi
     #   a = {:nombre => @bloques, :clase =>'identi', :padre => @padre, :variable =>valor}
@@ -260,7 +253,6 @@ class Semantics
     #   @bloques +=1
     # end
   end
-#al terminar convertir el bloque actual al padre
 end
 
 # pruebas hashing
@@ -273,22 +265,13 @@ File.open("algo.txt", "r") do |t|
     cadena += line
   end
 end
-
-puts cadena
-
-#puts 'debugger'
-#parse (cadena)
-
-parseo = parser.parse(cadena)
+--parseo = parser.parse(cadena)
 #pp parseo = parser.parse(cadena)
 pp final = trans.apply(parseo)
-
-puts 'arbol- recorrido'
+--puts 'arbol- recorrido'
 sem = Semantics.new(final)
 sem.recorrer_arbol(final)
 puts 'fin recorrido'
-
-puts 'Tabla de Simbolos : '
-
+--puts 'Tabla de Simbolos : '
  pp $tablas_simbolos
 =end
