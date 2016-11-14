@@ -142,6 +142,9 @@ end
 # semantico
 class Trans < Parslet::Transform
 
+  rule( :identi =>  simple(:iden),
+        :id =>  subtree(:valor)) do {id.to_s => valor} end
+
   rule( :entero =>  simple(:y))  { "entero" }
   rule( :id     =>  simple(:d)) {d.to_s}
   rule( :id     =>  simple(:id),
@@ -189,7 +192,7 @@ class Semantics
   def recorrer_arbol(arbol)
       arbol.each do |key, value|
         if value.is_a?(Hash)
-          puts "llave : #{key} -- iterando"
+          # puts "llave : #{key} -- iterando"
           evalua_llave(key, value)
           recorrer_arbol(value)
         else
@@ -219,18 +222,18 @@ class Semantics
   	if llave == :bloqueDeclaracion
       a = {:tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => @padre, :nombre => valor[:declaracion].keys[0], :numero => @bloques}
         @bloque_actual[valor[:declaracion].keys[0]]= a
-        pp 'bloque actual y llave'
-        pp [valor[:declaracion].keys[0]]
-        pp @bloque_actual
+        # pp 'bloque actual y llave'
+        # pp [valor[:declaracion].keys[0]]
+        # pp @bloque_actual
         # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
   	end
-    # if llave == :bloqueExpresion
-    #   a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => padre, :izq => valor[:izq], :der => valor[:der] }
-    #     $tablas_simbolos[@bloques]=a
-    #     @bloque_actual = $tablas_simbolos[@bloques]
-    #   @bloques +=1
-    # end
+    if llave == :bloqueExpresion
+      a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => @padre, :izq => valor[:izq], :der => valor[:der] }
+        $tablas_simbolos[@bloques]=a
+        @bloque_actual = $tablas_simbolos[@bloques]
+      @bloques +=1
+    end
     if llave == :clase
       a = {:nombre => @bloques, :clase =>'clase', :padre => @padre, :variable =>valor[:id]}
         $tablas_simbolos[@bloques]=a
@@ -246,12 +249,13 @@ class Semantics
       @bloque_actual = $tablas_simbolos['main']
     end
     # Recuerda nada mas hay que checar que la variable este guardada en el arbol de simbolos
-    # if llave == :identi
-    #   a = {:nombre => @bloques, :clase =>'identi', :padre => @padre, :variable =>valor}
-    #     $tablas_simbolos[@bloques]=a
-    #     @bloque_actual = $tablas_simbolos[@bloques]
-    #   @bloques +=1
-    # end
+    if llave == :identi or llave == :id
+      pp 'PUTAS LLAVES'
+      pp valor
+      pp @bloque_actual
+      pp @bloque_actual.has_key?(valor)
+
+    end
   end
 end
 

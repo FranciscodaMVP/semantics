@@ -178,7 +178,7 @@ class Semantics
   def initialize (lista)
     @lista=lista
     @bloques = 0
-    @padre_root = 0
+    @padre = 'main'
     $tablas_simbolos = Hash.new
     $tablas_simbolos['main']={:nombre => 'main', :padre => nil}
     @bloque_actual = $tablas_simbolos['main']
@@ -199,28 +199,24 @@ class Semantics
           evalua_llave(key,value)
         end
       end
-
   end
 
   def evalua_llave(llave, valor)
-    @padre = @padre_root
+    #@padre = @padre_root
     # puts 'evalua llave UFCK'
     # pp (@padre)
     # padre = @bloque_actual[:nombre]
     if llave == :bloqueSi
-      puts '\n\nbloque actuable n SI\n\n'
-      pp @bloque_actual
       a = {:nombre => @bloques,:clase => 'if', :padre => @padre}
         $tablas_simbolos[@bloques]=a
         @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
-      @padre_root = @bloque_actual[:nombre]
-      pp 'padre root'
-      pp @padre_root
+      @padre = @bloque_actual[:nombre]
+      # pp 'padre root'
+      # pp @padre
     end
 
   	if llave == :bloqueDeclaracion
-      # a = {:nombre => @bloques, :variable => valor[:declaracion].keys[0], :tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => @padre}
       a = {:tipo => valor[:declaracion].values[0],:clase => valor.keys[0], :padre => @padre, :nombre => valor[:declaracion].keys[0], :numero => @bloques}
         @bloque_actual[valor[:declaracion].keys[0]]= a
         pp 'bloque actual y llave'
@@ -229,25 +225,24 @@ class Semantics
         # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
   	end
-
-    # if llave == :bloqueExpresion
-    #   a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => padre, :izq => valor[:izq], :der => valor[:der] }
-    #     $tablas_simbolos[@bloques]=a
-    #     @bloque_actual = $tablas_simbolos[@bloques]
-    #   @bloques +=1
-    # end
-
+    if llave == :bloqueExpresion
+      a = {:nombre  =>  @bloques, :clase => 'expresion', :padre => @padre, :izq => valor[:izq], :der => valor[:der] }
+        $tablas_simbolos[@bloques]=a
+        @bloque_actual = $tablas_simbolos[@bloques]
+      @bloques +=1
+    end
     if llave == :clase
       a = {:nombre => @bloques, :clase =>'clase', :padre => @padre, :variable =>valor[:id]}
         $tablas_simbolos[@bloques]=a
         # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
-      @padre_root = @bloque_actual[:nombre]
+      @padre = @bloque_actual[:nombre]
     end
 
     if llave == :finBloque
+      @padre = 'main'
       pp 'final del bloque'
-      pp $tablas_simbolos[@padre_root]
+      pp @padre
       @bloque_actual = $tablas_simbolos['main']
     end
     # Recuerda nada mas hay que checar que la variable este guardada en el arbol de simbolos
@@ -258,7 +253,6 @@ class Semantics
     #   @bloques +=1
     # end
   end
-#al terminar convertir el bloque actual al padre
 end
 
 # pruebas hashing
