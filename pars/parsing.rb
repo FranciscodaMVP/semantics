@@ -116,13 +116,13 @@ class MyOwn < Parslet::Parser
 
   #instrucciones
   rule(:declaracion)  { (llave >>  tipoDato.as(:valor)).as(:declaracion) }
-  rule(:instSi)       { si  >>   condicionF.as(:logica)  >> entonces  >>  bloque  >>  llaveDer.as(:finBloque)} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
-  rule(:instClase)    { clase >>  identificador  >> dosPuntos  >>  bloque >>  llaveDer.as(:finBloque)  }
+  rule(:instSi)       { si  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >>  llaveDer.as(:finBloque)} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
+  rule(:instClase)    { clase >>  identificador.as(:claseId)  >> dosPuntos  >>  bloque >>  llaveDer.as(:finBloque)  }
   rule(:instDo)       { haz   >>  bloque.maybe   >>  mientras  >>  condicionF >>  llaveDer.as(:finBloque)}
   rule(:instWhile)    { mientras  >>  condicionF  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque) }
   rule(:instImport)   { importa >>  identificador }
   rule(:instPara)     { para  >>  identificador >>  en  >>  rangoF  >>  bloque  >>  llaveDer.as(:finBloque)}
-  rule(:instFunc)     { funcion >>  identificador >>  parenIz  >>  params.maybe  >>  parenDer  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque)}
+  rule(:instFunc)     { funcion >>  identificador.as(:funcId) >>  parenIz  >>  params.maybe  >>  parenDer  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque)}
   #bloque de codigo (DEFINIR BLOQUE)
   #rule(:bloque)       { (declaracion.as(:declaracion)  |  instSi.as(:siTest)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  | instPara.as(:para)) }
 
@@ -144,11 +144,18 @@ class Trans < Parslet::Transform
 
   rule( :identi =>  simple(:iden),
         :id =>  subtree(:valor)) do {id.to_s => valor} end
+#test con clase
+  rule( :clase     =>  simple(:clase),
+        :id  =>  subtree(:clasid)) do { clase.to_s => clasid}end# bloque_actual[id.to_s]=valor end#; }end
 
+#funca
   rule( :entero =>  simple(:y))  { "entero" }
+
   rule( :id     =>  simple(:d)) {d.to_s}
+
   rule( :id     =>  simple(:id),
         :valor  =>  subtree(:valor)) do { id.to_s => valor}end# bloque_actual[id.to_s]=valor end#; }end
+
   rule( :id     => simple(:i),
         :opLL   => subtree(:l),
         :entero => subtree(:le),
@@ -238,6 +245,7 @@ class Semantics
       a = {:nombre => @bloques, :clase =>'clase', :padre => @padre, :variable =>valor[:id]}
         $tablas_simbolos[@bloques]=a
         # @bloque_actual = $tablas_simbolos[@bloques]
+        pp "MOTHERFUCKING CLASSS FUCKING ASSHOLE"
       @bloques +=1
       @padre = @bloque_actual[:nombre]
     end
@@ -250,10 +258,16 @@ class Semantics
     end
     # Recuerda nada mas hay que checar que la variable este guardada en el arbol de simbolos
     if llave == :identi or llave == :id
-      pp 'PUTAS LLAVES'
+      pp '----------------BUSCANDO LLAVES-----------------'
       pp valor
       pp @bloque_actual
       pp @bloque_actual.has_key?(valor)
+      pp '----------------PADRE-----------------'
+      pp p = $tablas_simbolos[@bloque_actual[:padre]]
+      if p
+        pp p.has_key?(valor)
+      end
+      pp '----------------FIN BUSQUEDA-----------------'
 
     end
   end
