@@ -258,17 +258,26 @@ class Semantics
     end
     # Recuerda nada mas hay que checar que la variable este guardada en el arbol de simbolos
     if llave == :identi or llave == :id
+      encontrado = 0
       pp '----------------BUSCANDO LLAVES-----------------'
-      pp valor
-      pp @bloque_actual
-      pp @bloque_actual.has_key?(valor)
+      # pp 'encontrado = '+encontrado.to_s
+      # pp valor
+      # pp @bloque_actual
+      # pp @bloque_actual.has_key?(valor)
+      if @bloque_actual.has_key?(valor)
+        encontrado =+ 1
+      end
       pp '----------------PADRE-----------------'
       pp p = $tablas_simbolos[@bloque_actual[:padre]]
       if p
-        pp p.has_key?(valor)
+        if p.has_key?(valor)
+          encontrado =+ 1
+        end
       end
       pp '----------------FIN BUSQUEDA-----------------'
-
+      if encontrado == 0
+        pp valor.to_s + ', no se encuentra definido'
+      end
     end
   end
 end
