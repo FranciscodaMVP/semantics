@@ -192,8 +192,10 @@ class Semantics
     $tablas_simbolos = Hash.new
     $tablas_simbolos['main']={:nombre => 'main', :padre => nil}
     @bloque_actual = $tablas_simbolos['main']
-    puts 'bloque inicial'
-    pp @bloque_actual
+    @lista_errores = Hash.new
+    # puts 'bloque inicial'
+    # pp @bloque_actual
+    @log = String.new
   end
 
   def recorrer_arbol(arbol)
@@ -222,8 +224,6 @@ class Semantics
         @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
       @padre = @bloque_actual[:nombre]
-      # pp 'padre root'
-      # pp @padre
     end
 
   	if llave == :bloqueDeclaracion
@@ -245,21 +245,21 @@ class Semantics
       a = {:nombre => @bloques, :clase =>'clase', :padre => @padre, :variable =>valor[:id]}
         $tablas_simbolos[@bloques]=a
         # @bloque_actual = $tablas_simbolos[@bloques]
-        pp "MOTHERFUCKING CLASSS FUCKING ASSHOLE"
+        @log += "\n"+("MOTHERFUCKING CLASSS FUCKING ASSHOLE")
       @bloques +=1
       @padre = @bloque_actual[:nombre]
     end
 
     if llave == :finBloque
       @padre = 'main'
-      pp 'final del bloque'
-      pp @padre
+      @log += "\n"+('final del bloque')
+      @log += "\n"+(@padre)
       @bloque_actual = $tablas_simbolos['main']
     end
     # Recuerda nada mas hay que checar que la variable este guardada en el arbol de simbolos
     if llave == :identi or llave == :id
       encontrado = 0
-      pp '----------------BUSCANDO LLAVES-----------------'
+      @log += "\n"+('----------------BUSCANDO LLAVES-----------------')
       # pp 'encontrado = '+encontrado.to_s
       # pp valor
       # pp @bloque_actual
@@ -267,17 +267,27 @@ class Semantics
       if @bloque_actual.has_key?(valor)
         encontrado =+ 1
       end
-      pp '----------------PADRE-----------------'
-      pp p = $tablas_simbolos[@bloque_actual[:padre]]
+      @log += "\n"+('----------------PADRE-----------------')
+      p = $tablas_simbolos[@bloque_actual[:padre]]
+      @log += "\n"+p.to_s
       if p
         if p.has_key?(valor)
           encontrado =+ 1
         end
       end
-      pp '----------------FIN BUSQUEDA-----------------'
+      @log += "\n"+('----------------FIN BUSQUEDA-----------------')
       if encontrado == 0
-        pp valor.to_s + ', no se encuentra definido'
+        @log += "\n"+(valor.to_s + ', no se encuentra definido')
+        @lista_errores[valor] = {valor.to_s => 0}
       end
+    end
+
+    def imprime_log
+      puts @log
+    end
+
+    def errores
+      puts @lista_errores
     end
   end
 end
