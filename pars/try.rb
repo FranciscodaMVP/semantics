@@ -1,11 +1,13 @@
 require_relative 'parsing'
+require_relative 'semantics'
+require_relative 'transform'
 require 'pp'
 
 parser = MyOwn.new
 trans = Trans.new
 
  cadena =''
- File.open("algo.txt", "r") do |t|
+ File.open("code.txt", "r") do |t|
    t.each_line do |line|
      cadena += line
    end
@@ -13,9 +15,9 @@ trans = Trans.new
 
 debugger = false
 parssing = false
-transformado = false
+transformado = true
 semantico = false
-simbolos = false
+simbolos = true
 
 
  # debug

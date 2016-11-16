@@ -4,20 +4,23 @@
     then
     a = 3
     34 + a
+    t = 22
+
                 }
 
   b =7
-
   c = 5
 
-  9.2 + er
+  t = "perro"
 
-  class perro:
+  9.2 + er / 45 * t
+
+  class t:
     j = 0
     }
 
   funky avanza ():
-    p = n
+    p = a
     }
 
 >|
