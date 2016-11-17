@@ -1,6 +1,7 @@
 require_relative 'parsing'
 require_relative 'semantics'
 require_relative 'transform'
+require_relative 'code'
 require 'pp'
 
 parser = MyOwn.new
@@ -16,7 +17,7 @@ trans = Trans.new
 debugger = false
 parssing = false
 transformado = true
-semantico = false
+semantico = true
 simbolos = true
 
 
@@ -84,4 +85,7 @@ if simbolos
    ------------------------------------------------------------------'
     pp $tablas_simbolos
 end
+
+# code = Code.new(final)
+# code.recorrer_arbol(final)
   #opciones

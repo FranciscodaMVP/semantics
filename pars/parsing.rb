@@ -131,6 +131,7 @@ class MyOwn < Parslet::Parser
 
   #main
   rule(:bloques)      { bloque.as(:wat)  >>  bloques.maybe.as(:fuck) }
+  # rule(:bloques)      { bloque  >>  bloques.maybe }
   rule(:instruccion)       { inicio.as(:inicio) >>  bloques  >>  fin.as(:fin) }
   # rule(:instruccion)  { condicionF }
   # rule(:instruccion)  { opLogicos }
