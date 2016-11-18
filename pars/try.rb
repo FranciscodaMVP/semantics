@@ -88,11 +88,12 @@ end
 
 code = Code.new(final)
 code.recorrer_arbol(final)
+code.imp_has
   #opciones
 
-pp 'generacion de variables aleatorias'
-c = 0
-while c < 5 do
-  c += 1
-  code.genera_aux
-end
+# pp 'generacion de variables aleatorias'
+# c = 0
+# while c < 5 do
+#   c += 1
+#   code.genera_aux
+# end

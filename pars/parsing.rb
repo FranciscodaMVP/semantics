@@ -4,6 +4,13 @@ include Parslet
 
 # sintactico
 class MyOwn < Parslet::Parser
+  #espacios
+  rule(:espacio)      { match('\s').repeat(1)  }
+  rule(:espacio?)     { espacio.maybe }
+
+  rule(:linea)        { match('\n').repeat(1)  }
+  rule(:linea?)       {linea.maybe}
+
   # chars
   rule(:parenIz)      { str('(')  >>  espacio?  }
   rule(:parenDer)     { str(')')  >>  espacio?  }
@@ -18,14 +25,13 @@ class MyOwn < Parslet::Parser
   rule(:barra)        { str('|')  >>  espacio?  }
   rule(:llaveDer)     { str('}')  >>  espacio?  }
   rule(:llaveIzq)     { str('{')  >>  espacio?  }
-  rule(:linea)        { str('\n') >>  espacio?  }
 
   # operadores
-  rule(:mas)        { match('[+]')  >>  espacio?  }
-  rule(:mult)       { match('[*]')  >>  espacio?  }
-  rule(:menos)      { match('[-]')  >>  espacio?  }
-  rule(:division)   { match('[/]')  >>  espacio?  }
-  rule(:pow)        { match('[^]')  >>  espacio?  }
+  rule(:mas)        { match('[+]').as(:op)  >>  espacio?  }
+  rule(:mult)       { match('[*]').as(:op)  >>  espacio?  }
+  rule(:menos)      { match('[-]').as(:op)  >>  espacio?  }
+  rule(:division)   { match('[/]').as(:op)  >>  espacio?  }
+  rule(:pow)        { match('[^]').as(:op)  >>  espacio?  }
   rule(:operador)   { mas|menos|division|mult}
   rule(:yy)         { str('and')    >>  espacio?  }
   rule(:oo)         { str('or')     >>  espacio?  }
@@ -43,7 +49,7 @@ class MyOwn < Parslet::Parser
   rule(:opLogicos)  { (distinto  |  mayorigual  | menorIgual  | mayorQue  | menorQue).as(:opLL) >>  espacio? }
 
 # expresion
-  rule(:operacion)  { (tipoDato).as(:izq)  >>  operador.as(:op)	>>	expresion.as(:der)  }
+  rule(:operacion)  { (tipoDato).as(:izq)  >>  operador	>>	expresion.as(:der)  }
   rule(:listaArg)	  {	expresion >>	(coma	>> expresion).repeat	}
   rule(:funcionLla)	{	identificador.as(:funcionLla)	>>	parenIz	>>	listaArg.as(:listaArg)	>>	parenDer}
   rule(:expresion)  {  funcionLla	| operacion	|	tipoDato }
@@ -57,23 +63,19 @@ class MyOwn < Parslet::Parser
   rule(:expresion)  { producto | suma  | valor  }
 =end
 
-  #espacios
-  rule(:espacio)      { match('\s').repeat(1)  }
-  rule(:espacio?)     { espacio.maybe }
-
   # objetos
     #main
 
     #tipos de datos (AGREGAR MAS TIPOS DE DATOS?)
   rule(:digito)         { match('[0-9]').repeat(1)  }
-  rule(:entero)         { (digito  >> digito.repeat(0)) >>  espacio?  }
+  rule(:entero)         { (digito  >> digito.repeat(0)).as(:entero) >>  espacio? >> linea?  }
   rule(:flotante)       { entero  >>  punto >>  entero }
   rule(:flotis)         { flotante >> espacio? }
   rule(:cadena)         { comillas  >>  (match('[\w]').repeat(1)  >>  match('[\w]').repeat(0)) >> comillas  }
   rule(:identificador)  { (match['a-zA-z'].repeat(1) >>  match('\w').repeat(0)).as(:id) >> espacio?  }
   #tipo dato
   #rule(:tipoDato)       { flotante.as(:flotante)  | entero  | cadena.as(:cadena)  | identificador.as(:identificador) }
-  rule(:tipoDato)       { cadena.as(:cadena)  | flotis.as(:flotante)  | entero.as(:entero)  | identificador.as(:identi) }
+  rule(:tipoDato)       { cadena.as(:cadena)  | flotis.as(:flotante)  | entero  | identificador.as(:identi) }
 
   rule(:llave)          { identificador  >>  espacio? >>  igual >> espacio? }
 

@@ -25,11 +25,13 @@ class Code
 
   def genera(llave, valor)
     if llave == :bloqueExpresion
-      recorrer_expresion(valor)
+      r = recorrer_expresion(valor)
     end
+    pp 'wat----------' + r.to_s
   end
 
   def recorrer_expresion (expre)
+    lista_expresones = Hash.new
     @datos_hash += "\n"+'---------- DENTRO DEL HASH ----------'
     @datos_hash << "\n"+'recorriendo expresion'
     expre.each do |key, value|
@@ -43,19 +45,45 @@ class Code
           @datos_hash << "\n" + value.values[0].values.to_s + 'guardar'
           @datos_hash << "\n" + 'operador'
           @datos_hash << "\n" + value.values[1].to_s + 'op'
-          a = genera_aux
-          @lista_exp[a]= {value.values[0].values => value.values[1].to_s }
+          # a = genera_aux
+          # @lista_exp[a]= {value.values[0].values => value.values[1].to_s }
           # @datos_hash << "\n" + value.keys[0].identi
           # genera_aux
-          puts ' lista operadores'
-          recorrer_expresion(value)
+          aux = expresiones(value)
+          pp 'aux'
+          pp aux[1]
+          lista_expresones[aux[1]] = aux[0]
         else
           @datos_hash << "\n"+ 'fin hash'
           @datos_hash << "\n"+ value.to_s
         end
       end
     end
+    return lista_expresones
+  end
 
+  def expresiones (expre)
+    wat = Hash.new
+    expre.each do |key, value|
+      if value.is_a?(Hash)
+        if value.has_key?(:izq)
+          @datos_hash << "\n"+ 'adnetro del hash'
+          @datos_hash << "\n"+ value.to_s
+          @datos_hash << "\n" + 'datos a guardar'
+          @datos_hash << "\n" + value.keys[0].to_s
+          @datos_hash << "\n" + value.values[0].to_s
+          @datos_hash << "\n" + value.values[0].values.to_s + 'guardar'
+          @datos_hash << "\n" + 'operador'
+          @datos_hash << "\n" + value.values[1].to_s + 'op'
+          a = genera_aux
+          wat[a]= {value.values[0].values => value.values[1].to_s }
+          expresiones(value)
+          pp 'what i am doing'
+          pp wat
+          return wat, a
+        end
+      end
+    end
   end
 
   def genera_inter()#op)
@@ -72,7 +100,8 @@ class Code
 
   def imp_has
     puts @datos_hash
-    pp @lista_exp
+    puts ' lista operadores'
+    # pp @lista_exp
   end
 
 end

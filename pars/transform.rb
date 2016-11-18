@@ -11,7 +11,7 @@ class Trans < Parslet::Transform
         :id  =>  subtree(:clasid)) do { clase.to_s => clasid}end# bloque_actual[id.to_s]=valor end#; }end
 
 #funca
-  rule( :entero =>  simple(:y))  { "entero" }
+  rule( :entero =>  simple(:y)) do { "entero" =>  y } end
 
   rule( :cadena =>  simple(:y))  {"cadena"}
 
