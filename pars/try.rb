@@ -16,10 +16,10 @@ trans = Trans.new
 
 debugger = false
 parssing = false
-transformado = false
+transformado = true
 semantico = false
-simbolos = true
-
+simbolos = false
+coder = false
 
  # debug
 if debugger
@@ -86,14 +86,11 @@ if simbolos
     pp $tablas_simbolos
 end
 
-code = Code.new(final)
-code.recorrer_arbol(final)
-code.imp_has
+if coder
+  code = Code.new(final)
+  code.recorrer_arbol(final)
+  code.imp_has
+end
   #opciones
-
-# pp 'generacion de variables aleatorias'
-# c = 0
-# while c < 5 do
-#   c += 1
-#   code.genera_aux
-# end
+testTrans = CodeTrans.new
+pp wat = testTrans.apply(parseo)

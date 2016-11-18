@@ -32,10 +32,21 @@ class Code
   def recorrer_expresion (expre)
     @datos_hash += "\n"+'---------- DENTRO DEL HASH ----------'
     @datos_hash << "\n"+'recorriendo expresion'
+    @datos_hash << expre.to_s
     expre.each do |key, value|
+
       if value.is_a?(Hash)
-        if value.has_key?(:izq)
+        if value.has_key?(:izq) #&& value.has_key?()
           @datos_hash << "\n"+ 'adnetro del hash'
+
+          @datos_hash << "\n" + 'cada hash'
+          @datos_hash << "\n" + ' key ' + expre.keys.to_s
+          @datos_hash << "\n" + ' value ' + expre.values.to_s
+
+          @datos_hash << "\n" + 'GOING DEEPER' + "\n"
+          @datos_hash << 
+
+          @datos_hash << "\n" + 'QUIEN SABE' + "\n"
           @datos_hash << "\n"+ value.to_s
           @datos_hash << "\n" + 'datos a guardar'
           @datos_hash << "\n" + value.keys[0].to_s
@@ -43,6 +54,9 @@ class Code
           @datos_hash << "\n" + value.values[0].values.to_s + 'guardar'
           @datos_hash << "\n" + 'operador'
           @datos_hash << "\n" + value.values[1].to_s + 'op'
+
+          @datos_hash << "\n" + 'Guardando datos en el hash' + "\n"
+
           a = genera_aux
           @lista_exp[a]= {value.values[0].values => value.values[1].to_s }
           # @datos_hash << "\n" + value.keys[0].identi
@@ -55,7 +69,6 @@ class Code
         end
       end
     end
-
   end
 
   def genera_inter()#op)
