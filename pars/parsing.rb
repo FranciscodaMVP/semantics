@@ -47,6 +47,7 @@ class MyOwn < Parslet::Parser
   rule(:listaArg)	  {	expresion >>	(coma	>> expresion).repeat	}
   rule(:funcionLla)	{	identificador.as(:funcionLla)	>>	parenIz	>>	listaArg.as(:listaArg)	>>	parenDer}
   rule(:expresion)  {  funcionLla	| operacion	|	tipoDato }
+  rule(:expresionF) { identificador >>  dosPuntos >>  igual >>  expresion }
 
 =begin
 # expresion
@@ -126,8 +127,11 @@ class MyOwn < Parslet::Parser
   #bloque de codigo (DEFINIR BLOQUE)
   #rule(:bloque)       { (declaracion.as(:declaracion)  |  instSi.as(:siTest)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  | instPara.as(:para)) }
 
-  rule(:bloque)       { declaracion.as(:bloqueDeclaracion) |  ( instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
-    instPara.as(:para)  | expresion.as(:bloqueExpresion)) }
+
+  rule(:bloque)       { expresionF.as(:bloqueExpresion)}# | declaracion.as(:bloqueDeclaracion) |  ( instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
+
+  # rule(:bloque)       { expresionF.as(:bloqueExpresion) | declaracion.as(:bloqueDeclaracion) |  ( instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
+    # instPara.as(:para) ) }
 
   #main
   rule(:bloques)      { bloque.as(:wat)  >>  bloques.maybe.as(:fuck) }
