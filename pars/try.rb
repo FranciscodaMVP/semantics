@@ -93,4 +93,5 @@ if coder
 end
   #opciones
 testTrans = CodeTrans.new
+pp 'wat'
 pp wat = testTrans.apply(parseo)

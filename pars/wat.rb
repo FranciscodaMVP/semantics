@@ -34,7 +34,7 @@ Addition = Struct.new(:left, :right) do
   def eval; left.eval + right.eval; end
 end
 FunCall = Struct.new(:name, :args) do
-  def eval; p args.map { |s| s.eval }; end
+  #def eval; p args.map { |s| s.eval }; end
 end
 
 class MiniT < Parslet::Transform
@@ -53,10 +53,10 @@ transf = MiniT.new
 
 ast = transf.apply(
   parser.parse(
-    'puts(1,2,3, 4+5)'))
+    'puts(1,2,3, 4+5 + 5)'))
 
-pp parser.parse('puts(1,2,3, 4+5)')
+pp parser.parse('puts(1,2,3, 4+5 + 5)')
 
 pp ast
 
-ast.eval
+#ast.eval

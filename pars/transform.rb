@@ -29,6 +29,10 @@ class Trans < Parslet::Transform
 end
 # fin semantico
 
+ListaFun = Struct.new(:name, :args, :op) do
+  def eval; p args.map { |s| s.eval }; end
+end
+
 class CodeTrans < Parslet::Transform
 
   rule( :identi =>  simple(:id)) {id.to_s}
@@ -37,7 +41,9 @@ class CodeTrans < Parslet::Transform
         :id  =>  subtree(:clasid)) do { clase.to_s => clasid}end# bloque_actual[id.to_s]=valor end#; }end
 
 #funca
-  rule( :entero =>  simple(:y)) do { "entero" =>  y } end
+  rule( :entero    =>  simple(:t)) {t}
+  # rule( :der    =>  simple(:der)
+  #       :entero =>  subtree(:p)) { der => p }
 
   rule( :cadena =>  simple(:y))  {"cadena"}
 
