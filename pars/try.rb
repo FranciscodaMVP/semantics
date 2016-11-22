@@ -19,7 +19,7 @@ parssing = false
 transformado = true
 semantico = false
 simbolos = false
-coder = false
+coder = true
 
  # debug
 if debugger
@@ -86,12 +86,19 @@ if simbolos
     pp $tablas_simbolos
 end
 
-if coder
-  code = Code.new(final)
-  code.recorrer_arbol(final)
-  code.imp_has
-end
+# if coder
+#   code = Code.new(final)
+#   code.recorrer_arbol(final)
+#   code.imp_has
+# end
   #opciones
 testTrans = CodeTrans.new
 pp 'wat'
 pp wat = testTrans.apply(parseo)
+pp 'PERRO'
+
+if coder
+  code = Code.new(wat)
+  code.recorrer_arbol(wat)
+  # code.imp_has
+end
