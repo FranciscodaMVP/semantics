@@ -8,10 +8,15 @@ class MyOwn < Parslet::Parser
   rule(:espacio)      { match('\s').repeat(1)  }
   rule(:espacio?)     { espacio.maybe }
 
-  # rule(:linea)        { match('\n').repeat(1)  }
-  # rule(:linea?)       {linea.maybe}
+  rule(:linea)        { match('\n').repeat(1)  }
+  rule(:linea?)       {linea.maybe}
 
   # chars
+  # rule(:char)      {  str('#')  >>  espacio?  }
+  # rule(:comentario){  char  >>  (match('[\w]').repeat(1)  >>  match('[\W\w]').repeat(0))  >>  linea?}
+  # rule(:comentario){  char  >>  linea}
+
+
   rule(:parenIz)      { str('(')  >>  espacio?  }
   rule(:parenDer)     { str(')')  >>  espacio?  }
   rule(:coma)         { str(',')  >>  espacio?  }
@@ -38,23 +43,6 @@ class MyOwn < Parslet::Parser
   rule(:extras)     { yy | oo  }
   rule(:plusy)      { mas >>  mas >>  espacio?}
   rule(:potencia)   { entero  | flotante  | identificador >>  pow >>  entero  | flotante  | identificador }
-
-# nose
-rule(:inicio)       { str('->')     >>  espacio?  }
-rule(:fin)          { str('>|')     >>  espacio?  }
-rule(:nil)          { str('nil')    >>  espacio?  }
-rule(:siIF)         { str('if')     >>  espacio?  }
-rule(:para)         { str('for')    >>  espacio?  }
-rule(:entonces)     { str('then')   >>  espacio?  }
-rule(:clase)        { str('class')  >>  espacio?  }
-rule(:haz)          { str('do')     >>  espacio?  }
-rule(:mientras)     { str('while')  >>  espacio?  }
-rule(:importa)      { str('import') >>  espacio?  }
-rule(:para)         { str('for')    >>  espacio?  }
-rule(:rango)        { str('range')  >>  espacio?  }
-rule(:funcion)      { str('funky')  >>  espacio?  }
-rule(:en)           { str('in')     >>  espacio?  }
-
 
 #operadores logicos
   #rule(:asignar)    { str('==')   >>  espacio? }
@@ -85,7 +73,7 @@ rule(:en)           { str('in')     >>  espacio?  }
 
     #tipos de datos (AGREGAR MAS TIPOS DE DATOS?)
   rule(:digito)         { match('[0-9]').repeat(1)  }
-  rule(:entero)         { (digito  >> digito.repeat(0)).as(:entero) >>  espacio? }#>> linea?  }
+  rule(:entero)         { (digito  >> digito.repeat(0)).as(:entero) >>  espacio? >> linea?  }
   rule(:flotante)       { entero  >>  punto >>  entero }
   rule(:flotis)         { flotante >> espacio? }
   rule(:cadena)         { comillas  >>  (match('[\w]').repeat(1)  >>  match('[\w]').repeat(0)) >> comillas  }
@@ -97,7 +85,20 @@ rule(:en)           { str('in')     >>  espacio?  }
   rule(:llave)          { identificador  >>  espacio? >>  igual >> espacio? }
 
   #palabras
-
+  rule(:inicio)       { str('->')     >>  espacio?  }
+  rule(:fin)          { str('>|')     >>  espacio?  }
+  rule(:nil)          { str('nil')    >>  espacio?  }
+  rule(:si)           { str('if')     >>  espacio?  }
+  rule(:para)         { str('for')    >>  espacio?  }
+  rule(:entonces)     { str('then')   >>  espacio?  }
+  rule(:clase)        { str('class')  >>  espacio?  }
+  rule(:haz)          { str('do')     >>  espacio?  }
+  rule(:mientras)     { str('while')  >>  espacio?  }
+  rule(:importa)      { str('import') >>  espacio?  }
+  rule(:para)         { str('for')    >>  espacio?  }
+  rule(:rango)        { str('range')  >>  espacio?  }
+  rule(:funcion)      { str('funky')  >>  espacio?  }
+  rule(:en)           { str('in')     >>  espacio?  }
 #  rule(:)
 
 =begin
@@ -107,11 +108,11 @@ rule(:en)           { str('in')     >>  espacio?  }
   rule(:operaciones)  { identificador.as(:funcion)  >>  parenIz >>  lista_op.as(:lista) >>  parenDer  }
 =end
 # condicion
-  rule(:parteCon)     { (identificador | entero) }
-  rule(:condicion)    { parteCon.as(:izqCon)  >>  opLogicos.as(:op) >>  parteCon.as(:derCon) }
-  # rule(:condicionEx)  { extras  >>  condicion }
-  # rule(:condiciones)  { condicion.as(:condicion) >>  condicionEx.maybe }
-  rule(:condicionF)   { condicion >>  dosPuntos }
+  # rule(:parteCon)     { (identificador | entero) }
+  rule(:condicion)    { (identificador | entero).as(:izCon)  >>  opLogicos >>  (identificador | entero).as(:derCon) }
+  rule(:condicionEx)  { extras  >>  condicion }
+  rule(:condiciones)  { condicion.as(:condicion) >>  condicionEx.maybe }
+  rule(:condicionF)   { (condiciones) >>  dosPuntos }
 # definir rango
   #rule FALTA DEFINIR ARREGLO
   rule(:tiposrango)   { (tipoDato  | tipoDato)  >>  (coma  >>  tipoDato).repeat(1)  }
@@ -123,7 +124,7 @@ rule(:en)           { str('in')     >>  espacio?  }
 
   #instrucciones
   rule(:declaracion)  { (llave >>  tipoDato.as(:valor)).as(:declaracion) }
-  rule(:instSi)       { siIF  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >>  llaveDer.as(:finBloque)} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
+  rule(:instSi)       { si  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >>  llaveDer.as(:finBloque)} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
   rule(:instClase)    { clase >>  identificador.as(:claseId)  >> dosPuntos  >>  bloque >>  llaveDer.as(:finBloque)  }
   rule(:instDo)       { haz   >>  bloque.maybe   >>  mientras  >>  condicionF >>  llaveDer.as(:finBloque)}
   rule(:instWhile)    { mientras  >>  condicionF  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque) }
@@ -134,10 +135,10 @@ rule(:en)           { str('in')     >>  espacio?  }
   #rule(:bloque)       { (declaracion.as(:declaracion)  |  instSi.as(:siTest)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  | instPara.as(:para)) }
 
 
-  # rule(:bloque)       { instSi.as(:bloqueExpresion)}# | declaracion.as(:bloqueDeclaracion) |  ( instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
+  rule(:bloque)       { instSi.as(:instSi)}# | declaracion.as(:bloqueDeclaracion) |  ( instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
 
-  rule(:bloque)       { expresionF.as(:bloqueExpresion) | declaracion.as(:bloqueDeclaracion) |  instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
-    instPara.as(:para) }
+  # rule(:bloque)       { instSi.as(:bloqueSi)  | expresionF.as(:bloqueExpresion) | declaracion.as(:bloqueDeclaracion) |   instFunc.as(:bloqueFuncion)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar) |
+    # instPara.as(:para)  }
 
   #main
   rule(:bloques)      { bloque.as(:wat)  >>  bloques.maybe.as(:fuck) }

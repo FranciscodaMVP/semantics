@@ -14,7 +14,7 @@ trans = Trans.new
    end
  end
 
-debugger = false
+debugger = true
 parssing = false
 transformado = true
 semantico = false
@@ -26,7 +26,7 @@ if debugger
    puts '------------------------------------------------------------------
    DEBUGGER
    ------------------------------------------------------------------'
-   parse (cadena)
+   parse(cadena)
    puts '------------------------------------------------------------------
    DEBUGGER
    ------------------------------------------------------------------'
@@ -95,10 +95,12 @@ end
 testTrans = CodeTrans.new
 pp 'wat'
 pp wat = testTrans.apply(parseo)
-pp 'PERRO'
+# puts 'PERRO'
+# testTrans.imp_has
 
 if coder
   code = Code.new(wat)
   code.recorrer_arbol(wat)
-  # code.imp_has
+  pp 'nuevo'
+  code.imp_has
 end

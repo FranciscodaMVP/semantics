@@ -5,7 +5,7 @@ class Code
     @code = Array.new
     @temps = 0
     @datos_hash = String.new
-    @lista_exp = Hash.new
+    # @lista_exp = Hash.new
   end
 
   def recorrer_arbol (arbol)
@@ -26,18 +26,70 @@ class Code
   def genera(llave, valor)
     if llave == :bloqueExpresion
       recorrer_expresion(valor)
+      id = valor[:id]
+      temp = 't'+(@temps-1).to_s
+      genera_inter('asigna', id, temp, nil )
     end
   end
 
   def recorrer_expresion(expre)
-    pp expre
-    t = expre[:id]
-    pp t
-    aux = genera_aux
-    genera_inter(expre[:op], expre[:izq], expre[:der], aux)
+    a =false
+    @datos_hash << "\n"+ 'expresion'
+    @datos_hash << "\n"+ expre.to_s
 
-    genera_inter('asigna', expre[:id], aux, nil)
+    if expre[:der].is_a?(Hash)
+      @datos_hash << "\n"+ 'hashi'
+      @datos_hash << "\n"+ expre[:der].to_s
+      recorrer_expresion(expre[:der])
+      a =true
+    else
+      aux = genera_aux
+      @datos_hash << "\n"+ genera_inter(expre[:op], expre[:izq], expre[:der], aux).to_s
+      @datos_hash << "\n"+ @temps.to_s
+    end
+
+    if a
+      @datos_hash << "\n" + "final de la vuelta"
+      expre[:der] = 't'+(@temps-1).to_s
+      @datos_hash << "\n" + expre.to_s
+      recorrer_expresion(expre)
+    end
   end
+
+  def genera_inter(instruccion, izq, der, aux)#op)
+    case
+      # formato = op, resultado, arg1, arg2
+    when instruccion == "*"
+      b = ["multi", aux, izq, der]
+
+    when instruccion == "-"
+      b = ["resta", aux, izq, der]
+    when instruccion == "+"
+      b = ["suma", aux, izq, der]
+    when instruccion == "/"
+      b = ["divs", aux, izq, der]
+    when instruccion == "asigna"
+      b = ["asign", izq, der, '--']
+    end
+    @code << b
+    # pp b
+
+  end
+
+  def genera_aux # generacion de temporales
+    nombre_aux = 't'+@temps.to_s
+    # pp nombre_aux
+    @temps += 1
+    # pp 'el valor de en temporal es = '+@temps.to_s
+    return nombre_aux
+  end
+
+  def imp_has
+    # puts @datos_hash
+    pp @code
+  end
+end
+
 
   # def recorrer_expresion (expre)
   #   @datos_hash += "\n"+'---------- DENTRO DEL HASH ----------'
@@ -81,34 +133,31 @@ class Code
   #   end
   # end
 
-  def genera_inter(instruccion, izq, der, aux)#op)
-    case
-      # formato = op, resultado, arg1, arg2
-    when instruccion == "*"
-      b = ["multi", aux, izq, der]
-    when instruccion == "-"
-      b = ["resta", aux, izq, der]
-    when instruccion == "+"
-      b = ["suma", aux, izq, der]
-    when instruccion == "/"
-      b = ["divs", aux, izq, der]
-    when instruccion == "asigna"
-      b = ["asign", izq, der, '--']
-    end
-    pp b
-  end
+  # t = expre[:der]
+  # expre.each do |key, value|
+  #   if value.is_a?(Hash)
+  #     @datos_hash << "\n"+ 'key - SI ES HASH'
+  #     @datos_hash << "\n"+ value.keys.to_s
+  #
+  #     # @datos_hash << "\n"+ 'fin hash'
+  #     # @datos_hash << "\n"+ value.to_s
+  #   end
+  #     @datos_hash << "\n"+ 'NIGGA WHO KNOWS'
+  #     @datos_hash << "\n"+ value[:izq]
+  #
+  #     if value[:izq]
+  #       @datos_hash << "\n"+ 'volvemos a rntra'
+  #       recorrer_expresion(value[:der])
+  #     else
+  #       @datos_hash << "\n"+ 'genera inter'
+  #       @datos_hash << "\n"+ aux = genera_aux.to_s
+  #       @datos_hash << "\n"+ genera_inter(value[:op], value[:izq], value[:der], aux).to_s
+  #     end
+  #   end
+  # end
+  # genera_inter('asigna', expre[:id], aux, nil)
 
-  def genera_aux # generacion de temporales
-    nombre_aux = 't'+@temps.to_s
-    # pp nombre_aux
-    @temps += 1
-    # pp 'el valor de en temporal es = '+@temps.to_s
-    return nombre_aux
-  end
-
-  def imp_has
-    puts @datos_hash
-    pp @lista_exp
-  end
-
-end
+#  j := a * b + c * d
+# k > p:
+# then
+  # c = + 1 }
