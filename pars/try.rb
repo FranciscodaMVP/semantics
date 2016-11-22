@@ -14,9 +14,9 @@ trans = Trans.new
    end
  end
 
-debugger = true
+debugger = false
 parssing = false
-transformado = true
+transformado = false
 semantico = false
 simbolos = false
 coder = true
@@ -93,8 +93,11 @@ end
 # end
   #opciones
 testTrans = CodeTrans.new
-pp 'wat'
-pp wat = testTrans.apply(parseo)
+# pp 'wat'
+# pp wat = testTrans.apply(parseo)
+wat = testTrans.apply(parseo)
+
+
 # puts 'PERRO'
 # testTrans.imp_has
 

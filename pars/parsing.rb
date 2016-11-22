@@ -23,7 +23,7 @@ class MyOwn < Parslet::Parser
   rule(:punto)        { str('.')  >>  espacio?  }
   rule(:comillas)     { str('"')  >>  espacio?  }
   rule(:barra)        { str('|')  >>  espacio?  }
-  rule(:llaveDer)     { str('}')  >>  espacio?  }
+  rule(:llaveDer)     { str('}')  }#>>  espacio?  }
   rule(:llaveIzq)     { str('{')  >>  espacio?  }
 
   # operadores
@@ -58,11 +58,11 @@ rule(:en)           { str('in')     >>  espacio?  }
 
 #operadores logicos
   #rule(:asignar)    { str('==')   >>  espacio? }
-  rule(:distinto)   { str('!=') >>  espacio?}
-  rule(:mayorigual) { str('>=') >>  espacio?}
-  rule(:menorIgual) { str('<=') >>  espacio?}
-  rule(:mayorQue)   { str('>') >>  espacio? }
-  rule(:menorQue)   { str('<') >>  espacio? }
+  rule(:distinto)   { str('!=')}# >>  espacio?}
+  rule(:mayorigual) { str('>=')}# >>  espacio?}
+  rule(:menorIgual) { str('<=')}# >>  espacio?}
+  rule(:mayorQue)   { str('>') }#>>  espacio? }
+  rule(:menorQue)   { str('<') }#>>  espacio? }
   rule(:opLogicos)  { (distinto  |  mayorigual  | menorIgual  | mayorQue  | menorQue).as(:opLL) >>  espacio? }
 
 # expresion
@@ -123,7 +123,7 @@ rule(:en)           { str('in')     >>  espacio?  }
 
   #instrucciones
   rule(:declaracion)  { (llave >>  tipoDato.as(:valor)).as(:declaracion) }
-  rule(:instSi)       { siIF  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >>  llaveDer.as(:finBloque)} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
+  rule(:instSi)       { siIF  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >>  llaveDer.as(:finBloqueSI)  >>  espacio?} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
   rule(:instClase)    { clase >>  identificador.as(:claseId)  >> dosPuntos  >>  bloque >>  llaveDer.as(:finBloque)  }
   rule(:instDo)       { haz   >>  bloque.maybe   >>  mientras  >>  condicionF >>  llaveDer.as(:finBloque)}
   rule(:instWhile)    { mientras  >>  condicionF  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque) }

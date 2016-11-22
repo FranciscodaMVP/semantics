@@ -2,20 +2,21 @@ class Code
   attr_accessor :lista
   def initialize (lista)
     @lista = lista
-    @code = String.new
+    @code = Array.new
     @temps = 0
+    @temps_label = 1
     @datos_hash = String.new
-    @lista_exp = Hash.new
+    # @lista_exp = Hash.new
   end
 
   def recorrer_arbol (arbol)
       arbol.each do |key, value|
         if value.is_a?(Hash)
-          puts "llave : #{key} -- iterando en codes"
+          # puts "llave : #{key} -- iterando en codes"
           genera(key, value)
           recorrer_arbol(value)
         else
-          puts "llave : #{key}, valor : #{value} en codes"
+          # puts "llave : #{key}, valor : #{value} en codes"
           # puts 'clase'
           # puts key.class
           genera(key,value)
@@ -25,68 +26,96 @@ class Code
 
   def genera(llave, valor)
     if llave == :bloqueExpresion
-      r = recorrer_expresion(valor)
+      recorrer_expresion(valor)
+      id = valor[:id]
+      temp = 't'+(@temps-1).to_s
+      genera_inter('asigna', id, temp, nil )
     end
-    pp 'wat----------' + r.to_s
-  end
 
-  def recorrer_expresion (expre)
-    lista_expresones = Hash.new
-    @datos_hash += "\n"+'---------- DENTRO DEL HASH ----------'
-    @datos_hash << "\n"+'recorriendo expresion'
-    expre.each do |key, value|
-      if value.is_a?(Hash)
-        if value.has_key?(:izq)
-          @datos_hash << "\n"+ 'adnetro del hash'
-          @datos_hash << "\n"+ value.to_s
-          @datos_hash << "\n" + 'datos a guardar'
-          @datos_hash << "\n" + value.keys[0].to_s
-          @datos_hash << "\n" + value.values[0].to_s
-          @datos_hash << "\n" + value.values[0].values.to_s + 'guardar'
-          @datos_hash << "\n" + 'operador'
-          @datos_hash << "\n" + value.values[1].to_s + 'op'
-          # a = genera_aux
-          # @lista_exp[a]= {value.values[0].values => value.values[1].to_s }
-          # @datos_hash << "\n" + value.keys[0].identi
-          # genera_aux
-          aux = expresiones(value)
-          pp 'aux'
-          pp aux[1]
-          lista_expresones[aux[1]] = aux[0]
-        else
-          @datos_hash << "\n"+ 'fin hash'
-          @datos_hash << "\n"+ value.to_s
-        end
-      end
-    end
-    return lista_expresones
-  end
-
-  def expresiones (expre)
-    wat = Hash.new
-    expre.each do |key, value|
-      if value.is_a?(Hash)
-        if value.has_key?(:izq)
-          @datos_hash << "\n"+ 'adnetro del hash'
-          @datos_hash << "\n"+ value.to_s
-          @datos_hash << "\n" + 'datos a guardar'
-          @datos_hash << "\n" + value.keys[0].to_s
-          @datos_hash << "\n" + value.values[0].to_s
-          @datos_hash << "\n" + value.values[0].values.to_s + 'guardar'
-          @datos_hash << "\n" + 'operador'
-          @datos_hash << "\n" + value.values[1].to_s + 'op'
-          a = genera_aux
-          wat[a]= {value.values[0].values => value.values[1].to_s }
-          expresiones(value)
-          pp 'what i am doing'
-          pp wat
-          return wat, a
-        end
-      end
+    if llave == :bloqueSi
+      recorrer_bloqueSi(valor)
     end
   end
 
-  def genera_inter()#op)
+  def recorrer_bloqueSi(bloque)
+    pp 'el bloqueSi'
+    pp bloque
+    pp 'inside logica'
+    pp bloque[:logica][:izqCon]
+    aux = genera_aux
+    aux1 = bloque[:logica][:izqCon]
+    aux2 = bloque[:logica][:izqDer]
+    op = bloque[:logica][:op]
+    genera_inter(op, aux, aux1, aux2)
+
+    #etiqueta
+    tp = 't'+(@temp).to_s
+    etiqueta = genera_lbl_aux
+    genera_inter('si',tp, etiqueta, nil)
+
+    #codigo interior
+    pp 'wat'
+    pp bloque[:wat]
+    recorrer_arbol(bloque[:wat])
+
+    # goto
+    genera_inter('goto',etiqueta, nil, nil)
+
+    #etiqueta
+    genera_inter('etiqueta',etiqueta, nil, nil)
+
+  end
+
+  def recorrer_expresion(expre)
+    a =false
+    @datos_hash << "\n"+ 'expresion'
+    @datos_hash << "\n"+ expre.to_s
+
+    if expre[:der].is_a?(Hash)
+      @datos_hash << "\n"+ 'hashi'
+      @datos_hash << "\n"+ expre[:der].to_s
+      recorrer_expresion(expre[:der])
+      a =true
+    else
+      aux = genera_aux
+      @datos_hash << "\n"+ genera_inter(expre[:op], expre[:izq], expre[:der], aux).to_s
+      @datos_hash << "\n"+ @temps.to_s
+    end
+
+    if a
+      @datos_hash << "\n" + "final de la vuelta"
+      expre[:der] = 't'+(@temps-1).to_s
+      @datos_hash << "\n" + expre.to_s
+      recorrer_expresion(expre)
+    end
+  end
+
+  def genera_inter(instruccion, izq, der, aux)#op)
+    case
+      # formato = op, resultado, arg1, arg2
+    when instruccion == "*"
+      b = ["multi", aux, izq, der]
+
+    when instruccion == "-"
+      b = ["resta", aux, izq, der]
+    when instruccion == "+"
+      b = ["suma", aux, izq, der]
+    when instruccion == "/"
+      b = ["divs", aux, izq, der]
+    when instruccion == "asigna"
+      b = ["asign", izq, der, '--']
+    when instruccion == '>'
+      b = ["mayor", instruccion, izq, der]
+    when instruccion == 'si'
+      b = ["si_falso", izq, der, '--']
+    when instruccion == 'goto'
+      b = ["GOTO", izq, '--', '--']
+    when instruccion == 'etiqueta'
+      b = ["ETI", izq, '--', '--']
+
+    end
+    @code << b
+    # pp b
 
   end
 
@@ -98,10 +127,86 @@ class Code
     return nombre_aux
   end
 
-  def imp_has
-    puts @datos_hash
-    puts ' lista operadores'
-    # pp @lista_exp
+  def genera_lbl_aux
+    nombre_label = 'Label'+@temps_label.to_s
+    @temps_label += 1
+    return nombre_label
   end
 
+  def imp_has
+    # puts @datos_hash
+    pp @code
+  end
 end
+
+
+  # def recorrer_expresion (expre)
+  #   @datos_hash += "\n"+'---------- DENTRO DEL HASH ----------'
+  #   @datos_hash << "\n"+'recorriendo expresion'
+  #   @datos_hash << expre.to_s
+  #   expre.each do |key, value|
+  #
+  #     if value.is_a?(Hash)
+  #       if value.has_key?(:izq) #&& value.has_key?()
+  #         @datos_hash << "\n"+ 'adnetro del hash'
+  #
+  #         @datos_hash << "\n" + 'cada hash'
+  #         @datos_hash << "\n" + ' key ' + expre.keys.to_s
+  #         @datos_hash << "\n" + ' value ' + expre.values.to_s
+  #
+  #         @datos_hash << "\n" + 'GOING DEEPER' + "\n"
+  #         @datos_hash <<
+  #
+  #         @datos_hash << "\n" + 'QUIEN SABE' + "\n"
+  #         @datos_hash << "\n"+ value.to_s
+  #         @datos_hash << "\n" + 'datos a guardar'
+  #         @datos_hash << "\n" + value.keys[0].to_s
+  #         @datos_hash << "\n" + value.values[0].to_s
+  #         @datos_hash << "\n" + value.values[0].values.to_s + 'guardar'
+  #         @datos_hash << "\n" + 'operador'
+  #         @datos_hash << "\n" + value.values[1].to_s + 'op'
+  #
+  #         @datos_hash << "\n" + 'Guardando datos en el hash' + "\n"
+  #
+  #         a = genera_aux
+  #         @lista_exp[a]= {value.values[0].values => value.values[1].to_s }
+  #         # @datos_hash << "\n" + value.keys[0].identi
+  #         # genera_aux
+  #         puts ' lista operadores'
+  #         recorrer_expresion(value)
+  #       else
+  #         @datos_hash << "\n"+ 'fin hash'
+  #         @datos_hash << "\n"+ value.to_s
+  #       end
+  #     end
+  #   end
+  # end
+
+  # t = expre[:der]
+  # expre.each do |key, value|
+  #   if value.is_a?(Hash)
+  #     @datos_hash << "\n"+ 'key - SI ES HASH'
+  #     @datos_hash << "\n"+ value.keys.to_s
+  #
+  #     # @datos_hash << "\n"+ 'fin hash'
+  #     # @datos_hash << "\n"+ value.to_s
+  #   end
+  #     @datos_hash << "\n"+ 'NIGGA WHO KNOWS'
+  #     @datos_hash << "\n"+ value[:izq]
+  #
+  #     if value[:izq]
+  #       @datos_hash << "\n"+ 'volvemos a rntra'
+  #       recorrer_expresion(value[:der])
+  #     else
+  #       @datos_hash << "\n"+ 'genera inter'
+  #       @datos_hash << "\n"+ aux = genera_aux.to_s
+  #       @datos_hash << "\n"+ genera_inter(value[:op], value[:izq], value[:der], aux).to_s
+  #     end
+  #   end
+  # end
+  # genera_inter('asigna', expre[:id], aux, nil)
+
+#  j := a * b + c * d
+# k > p:
+# then
+  # c = + 1 }

@@ -4,6 +4,7 @@ class Code
     @lista = lista
     @code = Array.new
     @temps = 0
+    @temps_label = 1
     @datos_hash = String.new
     # @lista_exp = Hash.new
   end
@@ -30,6 +31,39 @@ class Code
       temp = 't'+(@temps-1).to_s
       genera_inter('asigna', id, temp, nil )
     end
+
+    if llave == :bloqueSi
+      recorrer_bloqueSi(valor)
+    end
+  end
+
+  def recorrer_bloqueSi(bloque)
+    @datos_hash << "\n"+ 'el bloqueSi'
+    @datos_hash << "\n"+ bloque.to_s
+    @datos_hash << "\n"+ 'inside logica'
+    @datos_hash << "\n"+ bloque[:logica][:izqCon].to_s
+    aux = genera_aux
+    aux1 = bloque[:logica][:izqCon]
+    aux2 = bloque[:logica][:izqDer]
+    op = bloque[:logica][:op]
+    genera_inter(op, aux, aux1, aux2)
+
+    #etiqueta
+    tp = 't'+(@temp).to_s
+    etiqueta = genera_lbl_aux
+    genera_inter('si',tp, etiqueta, nil)
+
+    #codigo interior
+    @datos_hash << "\n"+ 'wat'
+    @datos_hash << "\n"+ bloque[:wat].to_s
+    recorrer_arbol(bloque[:wat])
+
+    # goto
+    genera_inter('goto',etiqueta, nil, nil)
+
+    #etiqueta
+    genera_inter('etiqueta',etiqueta, nil, nil)
+
   end
 
   def recorrer_expresion(expre)
@@ -70,6 +104,15 @@ class Code
       b = ["divs", aux, izq, der]
     when instruccion == "asigna"
       b = ["asign", izq, der, '--']
+    when instruccion == '>'
+      b = ["mayor", instruccion, izq, der]
+    when instruccion == 'si'
+      b = ["si_falso", izq, der, '--']
+    when instruccion == 'goto'
+      b = ["GOTO", izq, '--', '--']
+    when instruccion == 'etiqueta'
+      b = ["ETI", izq, '--', '--']
+
     end
     @code << b
     # pp b
@@ -82,6 +125,12 @@ class Code
     @temps += 1
     # pp 'el valor de en temporal es = '+@temps.to_s
     return nombre_aux
+  end
+
+  def genera_lbl_aux
+    nombre_label = 'Label'+@temps_label.to_s
+    @temps_label += 1
+    return nombre_label
   end
 
   def imp_has

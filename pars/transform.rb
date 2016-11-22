@@ -35,6 +35,8 @@ end
 
 class CodeTrans < Parslet::Transform
 
+  rule( :opLL =>  simple(:opk)) {opk.to_s}
+
   rule( :identi =>  simple(:id)) {id.to_s}
 #test con clase
   rule( :clase     =>  simple(:clase),
