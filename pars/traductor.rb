@@ -21,7 +21,7 @@ class Traductor
     when "asign"
       @final <<  algo[1] + " = " + algo[2] + "\n"
     when "mayor"
-      @final <<  algo[2] + " > " + algo[3] + "\n"
+      @final <<  algo[1] + " = "+ algo[2] + " > " + algo[3] + "\n"
     when "si_falso"
       @final <<  'if_falso ' + algo[1] + "  " + algo[2] + "\n"
     when "multi"

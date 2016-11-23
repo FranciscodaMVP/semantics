@@ -28,7 +28,7 @@ class Code
     if llave == :bloqueExpresion
       recorrer_expresion(valor)
       id = valor[:id]
-      temp = 't'+(@temps-1).to_s
+      temp = 't'+(@temps).to_s
       genera_inter('asigna', id, temp, nil )
     end
 
@@ -64,16 +64,26 @@ class Code
     @datos_hash << "\n"+ bloque.to_s
     @datos_hash << "\n"+ 'inside logica'
     @datos_hash << "\n"+ bloque[:logica][:izqCon].to_s
+	if bloque[:elseif]
+		@datos_hash << "\n"+ 'bloque else IF'
+		@datos_hash << "\n"+ bloque[:elseif].to_s
+	end
+	
+	
     aux = genera_aux
     aux1 = bloque[:logica][:izqCon]
-    aux2 = bloque[:logica][:izqDer]
+    aux2 = bloque[:logica][:derCon]
     op = bloque[:logica][:op]
-    genera_inter(op, aux, aux1, aux2)
+	@datos_hash << "\n GENERA INTER \n"
+	@datos_hash << "\n  op = " + op + " aux = " + aux + " aux1 = "+aux1 + " aux 2 " + aux2 
+    genera_inter(op, aux, aux1, aux2).to_s
+	#@datos_hash << "\n" + genera_inter(op, aux, aux1, aux2).to_s
+	@datos_hash << "\n FIN GENERA INTER \n"
 
     #etiqueta
-    tp = 't'+(@temp).to_s
+    #tp = 't'+(@temp).to_s
     etiqueta = genera_lbl_aux
-    genera_inter('si',tp, etiqueta, nil)
+    genera_inter('si',aux, etiqueta, nil)
 
     #codigo interior
     @datos_hash << "\n"+ 'wat'
@@ -100,15 +110,20 @@ class Code
       a =true
     else
       aux = genera_aux
+	  @datos_hash << "\n Genera cuadrupla de expresion \n"
       @datos_hash << "\n"+ genera_inter(expre[:op], expre[:izq], expre[:der], aux).to_s
       @datos_hash << "\n"+ @temps.to_s
+	  @datos_hash << "\n TEMPORAL MENOS UNO \n"
+	  @datos_hash << (@temps -= 1 )
     end
 
     if a
       @datos_hash << "\n" + "final de la vuelta"
       expre[:der] = 't'+(@temps-1).to_s
       @datos_hash << "\n" + expre.to_s
+	  
       recorrer_expresion(expre)
+	  
     end
   end
 
@@ -121,12 +136,14 @@ class Code
       b = ["resta", aux, izq, der]
     when instruccion == "+"
       b = ["suma", aux, izq, der]
+	when instruccion == "=="
+      b = ["igualdad", aux, izq, der]
     when instruccion == "/"
       b = ["divs", aux, izq, der]
     when instruccion == "asigna"
       b = ["asign", izq, der, '--']
     when instruccion == '>'
-      b = ["mayor", instruccion, izq, der]
+      b = ["mayor", izq, der, aux]
     when instruccion == 'si'
       b = ["si_falso", izq, der, '--']
     when instruccion == 'goto'
@@ -135,6 +152,8 @@ class Code
       b = ["ETI", izq, '--', '--']
     when instruccion == 'declaracion'
       b = ["DECLARA", izq, der, '--']
+	else
+	  b = [instruccion, izq, der, 'NOSE']
 
     end
     @code << b

@@ -16,15 +16,16 @@ trans = Trans.new
    end
  end
 
-debugger = true
+debugger = false
 parssing = false
 transformado = false
 semantico = false
+semantico_errores = false
 simbolos = false
 transFormer = false
 coder = true
 coder_debugger = false
-cuadruplas = true
+cuadruplas = false
 
  # debug
 if debugger
@@ -80,7 +81,9 @@ if semantico
   ------------------------------------------------------------------'
 else
   sem.recorrer_arbol(final)
-  sem.errores
+  if semantico_errores
+	sem.errores
+  end
 end
 
 
