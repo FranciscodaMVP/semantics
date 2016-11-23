@@ -16,7 +16,7 @@ trans = Trans.new
    end
  end
 
-debugger = false
+debugger = true
 parssing = false
 transformado = false
 semantico = false
