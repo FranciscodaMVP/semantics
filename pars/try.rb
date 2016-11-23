@@ -21,9 +21,10 @@ parssing = false
 transformado = false
 semantico = false
 simbolos = false
+transFormer = false
 coder = true
-coder_debugger = true
-cuadruplas = false
+coder_debugger = false
+cuadruplas = true
 
  # debug
 if debugger
@@ -97,10 +98,12 @@ end
 # end
   #opciones
 testTrans = CodeTrans.new
-# pp 'wat'
-# pp wat = testTrans.apply(parseo)
-wat = testTrans.apply(parseo)
-
+if transFormer
+  puts "\n" + "wat \n\n"
+  pp wat = testTrans.apply(parseo)
+else
+  wat = testTrans.apply(parseo)
+end
 
 # puts 'PERRO'
 # testTrans.imp_has

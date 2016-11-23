@@ -36,7 +36,27 @@ class Code
       recorrer_bloqueSi(valor)
     end
 
+    if llave == :bloqueDeclaracion
+      recorrer_declar(valor)
+    end
     # if llave == :
+  end
+
+  def recorrer_declar(bloque)
+    @datos_hash << "\n"+ 'la declaracion'
+    @datos_hash << "\n"+ bloque.to_s
+    @datos_hash << "\n"+ 'dentro declaracion'
+    @datos_hash << "\n"+ bloque[:declaracion].to_s
+    @datos_hash << "\n"+ '------LLAVE------'
+    @datos_hash << "\n"+ bloque[:declaracion].keys[0].to_s
+    @datos_hash << "\n"+ '------valor------'
+    @datos_hash << "\n"+ bloque[:declaracion].values[0].to_s
+
+    aux = genera_aux
+    aux1 = bloque[:declaracion].keys[0]
+    aux2 = bloque[:declaracion].values[0]
+    genera_inter('declaracion', aux1, aux2, nil)
+
   end
 
   def recorrer_bloqueSi(bloque)
@@ -97,7 +117,6 @@ class Code
       # formato = op, resultado, arg1, arg2
     when instruccion == "*"
       b = ["multi", aux, izq, der]
-
     when instruccion == "-"
       b = ["resta", aux, izq, der]
     when instruccion == "+"
@@ -114,6 +133,8 @@ class Code
       b = ["GOTO", izq, '--', '--']
     when instruccion == 'etiqueta'
       b = ["ETI", izq, '--', '--']
+    when instruccion == 'declaracion'
+      b = ["DECLARA", izq, der, '--']
 
     end
     @code << b

@@ -30,6 +30,8 @@ class Traductor
       @final << "GOTO " + algo[1] + "\n"
     when "ETI"
       @final <<  algo[1] + "\n"
+    when "DECLARA"
+      @final <<  algo[1] + " = " + algo[2] + "\n"
 
     end
   end

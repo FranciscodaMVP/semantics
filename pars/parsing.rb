@@ -57,13 +57,13 @@ rule(:en)           { str('in')     >>  espacio?  }
 
 
 #operadores logicos
-  #rule(:asignar)    { str('==')   >>  espacio? }
+  rule(:asignar)    { str('==')}# >>  espacio? }
   rule(:distinto)   { str('!=')}# >>  espacio?}
   rule(:mayorigual) { str('>=')}# >>  espacio?}
   rule(:menorIgual) { str('<=')}# >>  espacio?}
-  rule(:mayorQue)   { str('>') }#>>  espacio? }
-  rule(:menorQue)   { str('<') }#>>  espacio? }
-  rule(:opLogicos)  { (distinto  |  mayorigual  | menorIgual  | mayorQue  | menorQue).as(:opLL) >>  espacio? }
+  rule(:mayorQue)   { str('>') }# >>  espacio? }
+  rule(:menorQue)   { str('<') }# >>  espacio? }
+  rule(:opLogicos)  { (asignar  | distinto  |  mayorigual  | menorIgual  | mayorQue  | menorQue).as(:opLL) >>  espacio? }
 
 # expresion
   rule(:operacion)  { (tipoDato).as(:izq)  >>  operador	>>	expresion.as(:der)  }
