@@ -35,6 +35,8 @@ class Code
     if llave == :bloqueSi
       recorrer_bloqueSi(valor)
     end
+
+    # if llave == :
   end
 
   def recorrer_bloqueSi(bloque)
@@ -134,8 +136,15 @@ class Code
   end
 
   def imp_has
-    # puts @datos_hash
+    puts @datos_hash
+  end
+
+  def imp_cuad
     pp @code
+  end
+
+  def get_code
+    return @code
   end
 end
 

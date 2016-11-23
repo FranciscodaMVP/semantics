@@ -2,6 +2,8 @@ require_relative 'parsing'
 require_relative 'semantics'
 require_relative 'transform'
 require_relative 'code'
+require_relative 'traductor'
+
 require 'pp'
 
 parser = MyOwn.new
@@ -20,6 +22,8 @@ transformado = false
 semantico = false
 simbolos = false
 coder = true
+coder_debugger = true
+cuadruplas = false
 
  # debug
 if debugger
@@ -104,6 +108,20 @@ wat = testTrans.apply(parseo)
 if coder
   code = Code.new(wat)
   code.recorrer_arbol(wat)
-  pp 'nuevo'
-  code.imp_has
+
+  if coder_debugger
+    pp 'nuevo'
+    code.imp_has
+  end
+  if cuadruplas
+    pp 'cuadruplas'
+    code.imp_cuad
+  end
+
+  # pp t.class
+
+  t = code.get_code
+  traduccion = Traductor.new(t)
+  traduccion.traducir
+  traduccion.imprime
 end
