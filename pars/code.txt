@@ -9,12 +9,16 @@ if t > 5:
 then
   t := t + 1 }
 
-  if n == 5:
+  if n == 15:
   then
     t := t + 1
   algo if n < 5:
   then
     t := M + 1
+	
+  algo if n < 10:
+  then
+    t := M + 2
   }
 
 >|

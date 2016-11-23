@@ -16,14 +16,14 @@ trans = Trans.new
    end
  end
 
-debugger = true
+debugger = false
 parssing = false
 transformado = false
 semantico = false
 simbolos = false
 transFormer = false
 coder = true
-coder_debugger = false
+coder_debugger = true
 cuadruplas = true
 
  # debug
