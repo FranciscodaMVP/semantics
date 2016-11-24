@@ -44,12 +44,14 @@ class CodeTrans < Parslet::Transform
   rule( :clase     =>  simple(:clase),
         :id  =>  subtree(:clasid)) do { clase.to_s => clasid}end# bloque_actual[id.to_s]=valor end#; }end
 
-#funca
+#partes del TIPO DATO
   rule( :entero    =>  simple(:t)) {t}
+  rule( :flotante =>  simple(:y))  {y}
+  # rule( :cadena =>  simple(:y))  {"cadena"}
+
   # rule( :der    =>  simple(:der)
   #       :entero =>  subtree(:p)) { der => p }
 
-  rule( :cadena =>  simple(:y))  {"cadena"}
 
   rule( :id     =>  simple(:d)) {d.to_s}
 
