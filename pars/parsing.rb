@@ -6,10 +6,12 @@ include Parslet
 class MyOwn < Parslet::Parser
   #espacios
   rule(:espacio)      { match('\s').repeat(1)  }
-  rule(:espacio?)     { espacio.maybe }
+  rule(:espacio1)     { espacio.maybe }
 
-  # rule(:linea)        { match('\n').repeat(1)  }
-  # rule(:linea?)       {linea.maybe}
+  rule(:espacio?)     { espacio1  | linea? }
+
+  rule(:linea)        { match('\n').repeat(1)  }
+  rule(:linea?)       {linea.maybe}
 
   # chars
   rule(:parenIz)      { str('(')  >>  espacio?  }
@@ -135,10 +137,10 @@ rule(:en)           { str('in')     >>  espacio?  }
   rule(:instSi)       { siIF  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >> elsee.maybe.as(:elses)   >>  llaveDer.as(:finBloqueSI)  >>  espacio?} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
   rule(:instClase)    { clase >>  identificador.as(:claseId)  >> dosPuntos  >>  bloque >>  llaveDer.as(:finBloque)  }
   rule(:instDo)       { haz   >>  bloque.maybe   >>  mientras  >>  condicionF >>  llaveDer.as(:finBloque)}
-  rule(:instWhile)    { mientras  >>  condicionF  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque) }
+  rule(:instWhile)    { mientras  >>  condicionF.as(:logica)  >>  bloque  >>  llaveDer.as(:finWHile) >>  espacio?}
   rule(:instImport)   { importa >>  identificador }
   rule(:instPara)     { para  >>  identificador >>  en  >>  rangoF  >>  bloque  >>  llaveDer.as(:finBloque)}
-  rule(:instFunc)     { funcion >>  identificador.as(:funcId) >>  parenIz  >>  params.maybe  >>  parenDer  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque)}
+  rule(:instFunc)     { funcion >>  identificador.as(:funcId) >>  parenIz  >>  params.maybe  >>  parenDer  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque)  >>  espacio?}
   #bloque de codigo (DEFINIR BLOQUE)
   #rule(:bloque)       { (declaracion.as(:declaracion)  |  instSi.as(:siTest)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  | instPara.as(:para)) }
 

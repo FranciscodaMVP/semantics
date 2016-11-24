@@ -40,22 +40,62 @@ class Code
       recorrer_declar(valor)
     end
 
+    #label para terminar el bloque si que tiene else
+    # RECORDATORIO INTENTAR IMPLEMENTAR VERSIONES DISTINTAS DE SI y SI ELSE
     if llave == :finBloqueSI
       etiqueta = 'Label'+(@temps_label-1).to_s
       genera_inter('etiqueta',etiqueta, nil, nil)
     end
-    # if llave == :
+
+    # fin bloque while
+    if llave == :finWHile
+      etiqueta = 'Label'+(@temps_label-1).to_s
+      genera_inter('etiqueta',etiqueta, nil, nil)
+    end
+
+    if llave == :cicloWhile
+      do_WHILE(valor)
+    end
+  end
+
+  def do_WHILE(bloque)
+    @datos_hash << "\n CICLO WHILE \n"
+    @datos_hash << "\n"+ bloque.to_s
+    @datos_hash << "\n"+ 'FIN CICLO WHILE'
+
+    # PARTE LOGICA
+    aux = genera_aux
+    aux1 = bloque[:logica][:izqCon]
+    aux2 = bloque[:logica][:derCon]
+    op = bloque[:logica][:op]
+    @datos_hash << "\n GENERA INTER \n"
+    @datos_hash << "\n  op = " + op + " aux = " + aux + " aux1 = "+aux1 + " aux 2 " + aux2
+    genera_inter(op, aux, aux1, aux2).to_s
+    #@datos_hash << "\n" + genera_inter(op, aux, aux1, aux2).to_s
+    @datos_hash << "\n FIN GENERA INTER \n"
+
+    #etiqueta do while
+    etiqueta = genera_lbl_aux
+    genera_inter('si',aux, etiqueta, nil)
+
+    # ir a fin
+    etiqueta2 = genera_lbl_aux
+    genera_inter('goto',etiqueta2, nil, nil)
+
+    # etiqueta
+    genera_inter('etiqueta',etiqueta, nil, nil)
+
   end
 
   def recorrer_declar(bloque)
-    @datos_hash << "\n"+ 'la declaracion'
-    @datos_hash << "\n"+ bloque.to_s
-    @datos_hash << "\n"+ 'dentro declaracion'
-    @datos_hash << "\n"+ bloque[:declaracion].to_s
-    @datos_hash << "\n"+ '------LLAVE------'
-    @datos_hash << "\n"+ bloque[:declaracion].keys[0].to_s
-    @datos_hash << "\n"+ '------valor------'
-    @datos_hash << "\n"+ bloque[:declaracion].values[0].to_s
+    # @datos_hash << "\n"+ 'la declaracion'
+    # @datos_hash << "\n"+ bloque.to_s
+    # @datos_hash << "\n"+ 'dentro declaracion'
+    # @datos_hash << "\n"+ bloque[:declaracion].to_s
+    # @datos_hash << "\n"+ '------LLAVE------'
+    # @datos_hash << "\n"+ bloque[:declaracion].keys[0].to_s
+    # @datos_hash << "\n"+ '------valor------'
+    # @datos_hash << "\n"+ bloque[:declaracion].values[0].to_s
 
     aux = genera_aux
     aux1 = bloque[:declaracion].keys[0]
@@ -65,15 +105,15 @@ class Code
   end
 
   def recorrer_bloqueSi(bloque)
-    @datos_hash << "\n"+ 'el bloqueSi'
-    @datos_hash << "\n"+ bloque.to_s
-    @datos_hash << "\n"+ 'inside logica'
-    @datos_hash << "\n"+ bloque[:logica][:izqCon].to_s
-	if bloque[:elses]
-		@datos_hash << "\n\n\n bloque ELSE "
-		@datos_hash << "\n"+ bloque[:elses].to_s
-    @datos_hash << "\n"+ bloque[:elses][:wat].to_s
-	end
+  #   @datos_hash << "\n"+ 'el bloqueSi'
+  #   @datos_hash << "\n"+ bloque.to_s
+  #   @datos_hash << "\n"+ 'inside logica'
+  #   @datos_hash << "\n"+ bloque[:logica][:izqCon].to_s
+	# if bloque[:elses]
+	# 	@datos_hash << "\n\n\n bloque ELSE "
+	# 	@datos_hash << "\n"+ bloque[:elses].to_s
+  #   @datos_hash << "\n"+ bloque[:elses][:wat].to_s
+	# end
     aux = genera_aux
     aux1 = bloque[:logica][:izqCon]
     aux2 = bloque[:logica][:derCon]
@@ -87,7 +127,7 @@ class Code
     #etiqueta
     #tp = 't'+(@temp).to_s
     etiqueta = genera_lbl_aux
-    genera_inter('si',aux, etiqueta, nil)
+    genera_inter('si-falso',aux, etiqueta, nil)
 
     #codigo interior
     @datos_hash << "\n"+ 'wat'
@@ -120,7 +160,7 @@ class Code
 	  @datos_hash << "\n Genera cuadrupla de expresion \n"
       @datos_hash << "\n"+ genera_inter(expre[:op], expre[:izq], expre[:der], aux).to_s
       @datos_hash << "\n"+ @temps.to_s
-	  @datos_hash << "\n TEMPORAL MENOS UNO \n"
+	  # @datos_hash << "\n TEMPORAL MENOS UNO \n"
 	  @datos_hash << (@temps -= 1 )
     end
 
@@ -158,6 +198,8 @@ class Code
     when instruccion == '<='
       b = ["menorIgual", izq, der, aux]
     when instruccion == 'si'
+      b = ["si", izq, der, '--']
+    when instruccion == 'si-falso'
       b = ["si_falso", izq, der, '--']
     when instruccion == 'goto'
       b = ["GOTO", izq, '--', '--']

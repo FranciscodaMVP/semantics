@@ -1,9 +1,9 @@
 ->
 
-t = 4
+t = 42
 M = 34
 
-M := t + 4
+M := t + 44
 
 if t > 5:
 then
@@ -17,5 +17,13 @@ then
     t := M + 1
 
   }
+
+funky algo ():
+  k := M + 2
+}
+
+  while n >= 10:
+    k := M + 2
+    }
 
 >|

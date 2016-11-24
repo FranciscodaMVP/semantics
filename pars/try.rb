@@ -22,9 +22,9 @@ transformado = false
 semantico = false
 semantico_errores = false
 simbolos = false
-transFormer = false
+transFormer = true
 coder = true
-coder_debugger = true
+coder_debugger = false
 cuadruplas = false
 
  # debug
