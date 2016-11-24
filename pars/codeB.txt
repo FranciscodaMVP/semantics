@@ -2,10 +2,12 @@
 
 t = "casa"
 M = 3.4
-f = 4
 
 M := t + 44
 
+if t > 5:
+then
+  t := t + 1 }
 
   if n == 15:
   then
@@ -23,10 +25,5 @@ funky algo ():
   while n >= 10:
     k := M + 2
     }
-
-
-if t > 5:
-then
-  t := t + 1 }
 
 >|

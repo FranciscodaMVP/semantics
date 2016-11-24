@@ -22,9 +22,10 @@ transformado = false
 semantico = false
 semantico_errores = false
 simbolos = false
-transFormer = true
+transFormer = false
+declarar = false
 coder = true
-coder_debugger = true
+coder_debugger = false
 cuadruplas = false
 
  # debug
@@ -100,12 +101,19 @@ end
 #   code.imp_has
 # end
   #opciones
+declara = CodeDeclara.new
+if declarar
+  pp dec = declara.apply(parseo)
+else
+  dec = declara.apply(parseo)
+end
+
 testTrans = CodeTrans.new
 if transFormer
   puts "\n" + "wat \n\n"
-  pp wat = testTrans.apply(parseo)
+  pp wat = testTrans.apply(dec)
 else
-  wat = testTrans.apply(parseo)
+  wat = testTrans.apply(dec)
 end
 
 # puts 'PERRO'

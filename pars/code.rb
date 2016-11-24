@@ -88,19 +88,20 @@ class Code
   end
 
   def recorrer_declar(bloque)
-    # @datos_hash << "\n"+ 'la declaracion'
-    # @datos_hash << "\n"+ bloque.to_s
-    # @datos_hash << "\n"+ 'dentro declaracion'
-    # @datos_hash << "\n"+ bloque[:declaracion].to_s
+    @datos_hash << "\n"+ 'la declaracion'
+    @datos_hash << "\n"+ bloque.to_s
+    @datos_hash << "\n"+ 'dentro declaracion'
+    @datos_hash << "\n"+ bloque[:declaracion][:id].to_s
     # @datos_hash << "\n"+ '------LLAVE------'
     # @datos_hash << "\n"+ bloque[:declaracion].keys[0].to_s
     # @datos_hash << "\n"+ '------valor------'
     # @datos_hash << "\n"+ bloque[:declaracion].values[0].to_s
 
     aux = genera_aux
-    aux1 = bloque[:declaracion].keys[0]
-    aux2 = bloque[:declaracion].values[0]
-    genera_inter('declaracion', aux1, aux2, nil)
+    aux1 = bloque[:declaracion][:id]
+    aux2 = bloque[:declaracion][:tipo]# :id, :tipo, :valor
+    aux3 = bloque[:declaracion][:valor]# :id, :tipo, :valor
+    genera_inter('declaracion', aux1, aux2, aux3)
 
   end
 
@@ -206,7 +207,7 @@ class Code
     when instruccion == 'etiqueta'
       b = ["ETI", izq, '--', '--']
     when instruccion == 'declaracion'
-      b = ["DECLARA", izq, der, '--']
+      b = ["DECLARA", izq, der, aux]
 	else
 	  b = [instruccion, izq, der, 'NOSE']
 
