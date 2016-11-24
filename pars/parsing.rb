@@ -89,13 +89,14 @@ rule(:en)           { str('in')     >>  espacio?  }
     #tipos de datos (AGREGAR MAS TIPOS DE DATOS?)
   rule(:digito)         { match('[0-9]').repeat(1)  }
   rule(:entero)         { (digito  >> digito.repeat(0)).as(:entero) >>  espacio? }#>> linea?  }
-  rule(:flotante)       { entero  >>  punto >>  entero }
-  rule(:flotis)         { flotante >> espacio? }
-  rule(:cadena)         { comillas  >>  (match('[\w]').repeat(1)  >>  match('[\w]').repeat(0)) >> comillas  }
+
+  rule(:flotante)       { (digito  >> digito.repeat(0) >>  punto >>  digito  >> digito.repeat(0)).as(:flotante)  >> espacio? }
+  # rule(:flotis)         { flotante  }
+  rule(:cadena)         { comillas  >>  (match('[\w]').repeat(1)  >>  match('[\w]').repeat(0)).as(:cadena) >> comillas  }
   rule(:identificador)  { (match['a-zA-z'].repeat(1) >>  match('\w').repeat(0)).as(:id) >> espacio?  }
   #tipo dato
   #rule(:tipoDato)       { flotante.as(:flotante)  | entero  | cadena.as(:cadena)  | identificador.as(:identificador) }
-  rule(:tipoDato)       { cadena.as(:cadena)  | flotis.as(:flotante)  | entero  | identificador.as(:identi) }
+  rule(:tipoDato)       { flotante  | cadena  | entero  | identificador.as(:identi) }
 
   rule(:llave)          { identificador  >>  espacio? >>  igual >> espacio? }
 

@@ -1,6 +1,6 @@
 ->
 
-t = casa
+t = "casa"
 M = 3.4
 
 M := t + 44
