@@ -24,7 +24,7 @@ semantico_errores = false
 simbolos = false
 transFormer = false
 coder = true
-coder_debugger = false
+coder_debugger = true
 cuadruplas = false
 
  # debug

@@ -125,9 +125,14 @@ rule(:en)           { str('in')     >>  espacio?  }
   #instrucciones
   rule(:declaracion)  { (llave >>  tipoDato.as(:valor)).as(:declaracion) }
   # rule(:instSi)       { siIF  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >>  llaveDer.as(:finBloqueSI)  >>  espacio?} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
+  # ELSE IF DEPRECATED
   rule(:elseif)       { elseI  >> siIF  >>  condicionF.as(:logica)  >>  entonces  >>  bloques }
-  rule(:elseifs)      { elseif.as(:elseif)  >>  elseifs.maybe.as(:elseifs) }
-  rule(:instSi)       { siIF  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >> elseifs.maybe   >>  llaveDer.as(:finBloqueSI)  >>  espacio?} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
+  rule(:elseifs)      { elseif.as(:elseif)  >>  elseifs.maybe }#.as(:elseifs) }
+  # ELSE
+  rule(:elsee)       { elseI  >>  dosPuntos >>  entonces  >>  bloques}
+
+
+  rule(:instSi)       { siIF  >>   condicionF.as(:logica)  >> entonces  >>  bloques  >> elsee.maybe.as(:elses)   >>  llaveDer.as(:finBloqueSI)  >>  espacio?} # .as(:instruccion) NOMBRAR A BLOQUE INSTRUCCION?
   rule(:instClase)    { clase >>  identificador.as(:claseId)  >> dosPuntos  >>  bloque >>  llaveDer.as(:finBloque)  }
   rule(:instDo)       { haz   >>  bloque.maybe   >>  mientras  >>  condicionF >>  llaveDer.as(:finBloque)}
   rule(:instWhile)    { mientras  >>  condicionF  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque) }
@@ -139,7 +144,7 @@ rule(:en)           { str('in')     >>  espacio?  }
 
 
   # rule(:bloque)       { instSi.as(:bloqueSi)    | expresionF.as(:expre)}# |  ( instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
-
+# DESCOMENTAR
   rule(:bloque)       { expresionF.as(:bloqueExpresion) | declaracion.as(:bloqueDeclaracion) |  instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
     instPara.as(:para) }
 

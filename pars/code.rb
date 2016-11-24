@@ -39,6 +39,11 @@ class Code
     if llave == :bloqueDeclaracion
       recorrer_declar(valor)
     end
+
+    if llave == :finBloqueSI
+      etiqueta = 'Label'+(@temps_label-1).to_s
+      genera_inter('etiqueta',etiqueta, nil, nil)
+    end
     # if llave == :
   end
 
@@ -64,18 +69,17 @@ class Code
     @datos_hash << "\n"+ bloque.to_s
     @datos_hash << "\n"+ 'inside logica'
     @datos_hash << "\n"+ bloque[:logica][:izqCon].to_s
-	if bloque[:elseif]
-		@datos_hash << "\n"+ 'bloque else IF'
-		@datos_hash << "\n"+ bloque[:elseif].to_s
+	if bloque[:elses]
+		@datos_hash << "\n\n\n bloque ELSE "
+		@datos_hash << "\n"+ bloque[:elses].to_s
+    @datos_hash << "\n"+ bloque[:elses][:wat].to_s
 	end
-	
-	
     aux = genera_aux
     aux1 = bloque[:logica][:izqCon]
     aux2 = bloque[:logica][:derCon]
     op = bloque[:logica][:op]
 	@datos_hash << "\n GENERA INTER \n"
-	@datos_hash << "\n  op = " + op + " aux = " + aux + " aux1 = "+aux1 + " aux 2 " + aux2 
+	@datos_hash << "\n  op = " + op + " aux = " + aux + " aux1 = "+aux1 + " aux 2 " + aux2
     genera_inter(op, aux, aux1, aux2).to_s
 	#@datos_hash << "\n" + genera_inter(op, aux, aux1, aux2).to_s
 	@datos_hash << "\n FIN GENERA INTER \n"
@@ -91,10 +95,13 @@ class Code
     recorrer_arbol(bloque[:wat])
 
     # goto
-    genera_inter('goto',etiqueta, nil, nil)
-
-    #etiqueta
-    genera_inter('etiqueta',etiqueta, nil, nil)
+    etiqueta2 = genera_lbl_aux
+    if bloque[:elses]
+      genera_inter('goto',etiqueta2, nil, nil)
+      genera_inter('etiqueta',etiqueta, nil, nil)
+    else
+      genera_inter('etiqueta',etiqueta, nil, nil)
+    end
 
   end
 
@@ -121,9 +128,9 @@ class Code
       @datos_hash << "\n" + "final de la vuelta"
       expre[:der] = 't'+(@temps-1).to_s
       @datos_hash << "\n" + expre.to_s
-	  
+
       recorrer_expresion(expre)
-	  
+
     end
   end
 
@@ -137,13 +144,19 @@ class Code
     when instruccion == "+"
       b = ["suma", aux, izq, der]
 	when instruccion == "=="
-      b = ["igualdad", aux, izq, der]
+      b = ["igualdad", izq, der, aux]
     when instruccion == "/"
       b = ["divs", aux, izq, der]
     when instruccion == "asigna"
       b = ["asign", izq, der, '--']
     when instruccion == '>'
       b = ["mayor", izq, der, aux]
+    when instruccion == '<'
+      b = ["menor", izq, der, aux]
+    when instruccion == '>='
+      b = ["mayorIgual", izq, der, aux]
+    when instruccion == '<='
+      b = ["menorIgual", izq, der, aux]
     when instruccion == 'si'
       b = ["si_falso", izq, der, '--']
     when instruccion == 'goto'
