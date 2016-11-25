@@ -18,13 +18,13 @@ trans = Trans.new
 
 debugger = false
 parssing = false
-transformado = false
-semantico = false
+transformado = true
+semantico = true
 semantico_errores = false
-simbolos = false
+simbolos = true
 declarar = false
-transFormer = true
-coder = true
+transFormer = false
+coder = false
 coder_debugger = false
 cuadruplas = false
 
@@ -40,7 +40,7 @@ if debugger
 end
  #fin debug
 
-
+# parseo para proceso final
 if parssing
   puts '
   -------------------------------
@@ -58,6 +58,7 @@ else
   parseo = parser.parse(cadena)
 end
 
+# transformacion tal vez deprecada
 if transformado
    puts '------------------------------------------------------------------
    arbol transformado
@@ -70,6 +71,7 @@ else
   final = trans.apply(parseo)
 end
 
+# analisis semantico
 sem = Semantics.new(final)
 if semantico
   puts '------------------------------------------------------------------
@@ -80,6 +82,10 @@ if semantico
   puts '------------------------------------------------------------------
   fin recorrido
   ------------------------------------------------------------------'
+    if semantico_errores
+		sem.errores
+	end
+  
 else
   sem.recorrer_arbol(final)
   if semantico_errores
@@ -87,7 +93,7 @@ else
   end
 end
 
-
+# impresion de la tabla de simbolos
 if simbolos
    puts '------------------------------------------------------------------
    Tabla de Simbolos :
@@ -101,6 +107,8 @@ end
 #   code.imp_has
 # end
   #opciones
+  
+# transformacion para modificar declaraciones   
 declara = CodeDeclara.new
 if declarar
   pp dec = declara.apply(parseo)
@@ -108,6 +116,7 @@ else
   dec = declara.apply(parseo)
 end
 
+# transformacion final para codigo intermedio
 testTrans = CodeTrans.new
 if transFormer
   puts "\n" + "wat \n\n"
@@ -116,24 +125,24 @@ else
   wat = testTrans.apply(dec)
 end
 
-# puts 'PERRO'
-# testTrans.imp_has
-
+# generador de codigo intermedio
 if coder
   code = Code.new(wat)
   code.recorrer_arbol(wat)
 
+  # debugger del coder
   if coder_debugger
     pp 'nuevo'
     code.imp_has
   end
+  
+  # imprime cuadruplas
   if cuadruplas
     pp 'cuadruplas'
     code.imp_cuad
   end
 
-  # pp t.class
-
+  # convierte las cuadruplas en codigo intermedio
   t = code.get_code
   traduccion = Traductor.new(t)
   traduccion.traducir

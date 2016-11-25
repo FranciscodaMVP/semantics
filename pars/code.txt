@@ -1,35 +1,9 @@
 ->
 
-t = "casa"
-M = 3.4
-f = 4
+  t = 34
 
-M := t + 44
+  car := M * 6 /t * 5 /t
 
-
-  if n == 15:
-  then
-    t := t + 1
-  algo:
-  then
-    t := M + 1
-
-  }
-
-  funky suma (a entero, b entero, c entero):
-  resultado := a + b
-  return resultado
-}
-
-  auto := suma (23, tr, 46)}
-
-  while n >= 10:
-    k := M + 2
-    }
-
-
-if t > 5:
-then
-  t := t + 1 }
+  perro := t +6
 
 >|
