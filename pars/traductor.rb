@@ -59,8 +59,13 @@ class Traductor
     when "ETI"
       @final <<  algo[1] + "\n"
     when "DECLARA"
-      # @final <<  "  " + tipo_dato(algo[2]) + " = " + algo[1] + "\n"
       @declarado <<  "  " + algo[1] + " = " + algo[3] + " - " +tipo_dato(algo[2])+"\n"
+    when "declaracionparam"
+      @final <<  "  " + algo[2] + " = " + algo[1] +"\n"
+#PUSH y COSAS DE ENSAMBLADOR
+    when "PUSH"
+      @final <<  " PUSH " + algo[1] +"\n"
+      # @final <<  "  " + tipo_dato(algo[2]) + " = " + algo[1] + "\n"
     end
   end
 

@@ -40,6 +40,10 @@ class Code
       recorrer_declar(valor)
     end
 
+    if llave == :bloqueFuncion
+      checa_funcion(valor)
+    end
+
     #label para terminar el bloque si que tiene else
     # RECORDATORIO INTENTAR IMPLEMENTAR VERSIONES DISTINTAS DE SI y SI ELSE
     if llave == :finBloqueSI
@@ -53,8 +57,60 @@ class Code
       genera_inter('etiqueta',etiqueta, nil, nil)
     end
 
+    if llave == :finFuncion
+      etiqueta = 'END_FUNCTION'
+      genera_inter('etiqueta',etiqueta, nil, nil)
+    end
+
     if llave == :cicloWhile
       do_WHILE(valor)
+    end
+  end
+
+  def checa_funcion(bloque)
+
+# CABEZA DE LA FUNCION
+    @datos_hash << "\n FUNCION \n"
+    @datos_hash << "\n"+ bloque.to_s
+    @datos_hash << "\n PARAMS \n"
+    etiqueta = "_"+bloque[:funcId]
+    genera_inter('etiqueta',etiqueta, nil, nil)
+
+# parametros
+    if bloque[:parametros]
+      @datos_hash <<  "\n"+bloque[:parametros].to_s
+      params(bloque[:parametros])
+    end
+
+# salida o retorno de params
+  # CALL X
+  # POP TALGO
+
+  # BEGIN FUNCTION
+  etiqueta = 'BEGIN_FUNCTION'
+  genera_inter('etiqueta',etiqueta, nil, nil)
+  # Cuerpo de la funcion
+
+  # END FUNCTION
+  end
+
+  def params (bloque)
+    @datos_hash << "\n CICLOS PARAMETROS \n"
+    @datos_hash << "\n"+ bloque.to_s
+    @datos_hash << "\n FIN CICLOS PARAMETROS \n"
+
+    id = bloque[:param]
+    tipo = bloque[:tipo]
+
+    # declaracion
+    aux = genera_aux
+    genera_inter('declaracionparam', id, aux, '--')
+
+    # PUSH de la var
+    genera_inter('PUSH', aux, '--', '--')
+
+    if bloque[:parame]
+      params(bloque[:parame])
     end
   end
 
@@ -208,6 +264,10 @@ class Code
       b = ["ETI", izq, '--', '--']
     when instruccion == 'declaracion'
       b = ["DECLARA", izq, der, aux]
+    when instruccion == 'declaracionparam'
+      b = ["declaracionparam", izq, der, aux]
+    when instruccion == 'PUSH'
+      b = ["PUSH", izq, '--', '--']
 	else
 	  b = [instruccion, izq, der, 'NOSE']
 
@@ -315,3 +375,25 @@ end
 # k > p:
 # then
   # c = + 1 }
+
+# final
+# t = "casa"
+# M = 3.4
+# f = 4
+#
+# M := t + 44
+#
+#
+#   if n == 15:
+#   then
+#     t := t + 1
+#   algo:
+#   then
+#     t := M + 1
+#
+#   }
+#
+#   funky suma (a entero, b entero, c entero):
+#   resultado := a + b
+#   return resultado
+# }

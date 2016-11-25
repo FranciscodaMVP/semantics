@@ -16,9 +16,12 @@ M := t + 44
 
   }
 
-funky algo ():
-  k := M + 2
+  funky suma (a entero, b entero, c entero):
+  resultado := a + b
+  return resultado
 }
+
+  auto := suma (23, tr, 46)}
 
   while n >= 10:
     k := M + 2

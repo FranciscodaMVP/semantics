@@ -57,7 +57,14 @@ rule(:para)         { str('for')    >>  espacio?  }
 rule(:rango)        { str('range')  >>  espacio?  }
 rule(:funcion)      { str('funky')  >>  espacio?  }
 rule(:en)           { str('in')     >>  espacio?  }
+# tipos de datos
+rule(:int)          { str('entero')     >>  espacio?  }
+rule(:float)        { str('flotante')   >>  espacio?  }
+rule(:string)       { str('cadena')     >>  espacio?  }
 
+rule(:tipos_param)  { int | float | string }
+
+rule(:regresa)       { str('return')     >>  espacio?  }
 
 #operadores logicos
   rule(:asignar)    { str('==')}# >>  espacio? }
@@ -121,7 +128,10 @@ rule(:en)           { str('in')     >>  espacio?  }
   rule(:tiposrango)   { (tipoDato  | tipoDato)  >>  (coma  >>  tipoDato).repeat(1)  }
   rule(:rangos)       { tiposrango  | arreglo   }
   rule(:rangoF)       { rangos >>  dosPuntos  }
-  rule(:params)       { identificador >>  (coma  >>  params).maybe  }
+  rule(:params)       { identificador.as(:param)  >>  tipos_param.as(:tipo) >>  (coma  >>  params).maybe.as(:parame)  }
+
+  rule(:paramesFun)   { (identificador | entero  | flotante).as(:algo) }
+  rule(:paramsFun)    { paramesFun.as(:paramF) >>  (coma  >>  paramsFun).maybe.as(:paramsF) }
 #BLOQUE?rule(:condicion)    { identificador | entero  >>  (bloque >> pYc).as(:instruccion)  >>  }
 # el bloque tiene que estar lleno de todas las condiciones
 
@@ -131,7 +141,7 @@ rule(:en)           { str('in')     >>  espacio?  }
   # ELSE IF DEPRECATED
   rule(:elseif)       { elseI  >> siIF  >>  condicionF.as(:logica)  >>  entonces  >>  bloques }
   rule(:elseifs)      { elseif.as(:elseif)  >>  elseifs.maybe }#.as(:elseifs) }
-  # ELSE
+  # ELSEparamsFun
   rule(:elsee)       { elseI  >>  dosPuntos >>  entonces  >>  bloques}
 
 
@@ -141,15 +151,16 @@ rule(:en)           { str('in')     >>  espacio?  }
   rule(:instWhile)    { mientras  >>  condicionF.as(:logica)  >>  bloque  >>  llaveDer.as(:finWHile) >>  espacio?}
   rule(:instImport)   { importa >>  identificador }
   rule(:instPara)     { para  >>  identificador >>  en  >>  rangoF  >>  bloque  >>  llaveDer.as(:finBloque)}
-  rule(:instFunc)     { funcion >>  identificador.as(:funcId) >>  parenIz  >>  params.maybe  >>  parenDer  >>  dosPuntos >>  bloque  >>  llaveDer.as(:finBloque)  >>  espacio?}
+  rule(:instFunc)     { funcion >>  identificador.as(:funcId) >>  parenIz  >>  params.maybe.as(:parametros)  >>  parenDer  >>  dosPuntos >>  bloque  >> regresa >> identificador  >>  llaveDer.as(:finFuncion)  >>  espacio?}
+  rule(:llamFunc)     { identificador.as(:identificador) >>  dosPuntos >>  igual >>  identificador.as(:funcion) >>  parenIz >>  paramsFun.maybe >>  parenDer  >>  llaveDer >> espacio? }
   #bloque de codigo (DEFINIR BLOQUE)
   #rule(:bloque)       { (declaracion.as(:declaracion)  |  instSi.as(:siTest)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  | instPara.as(:para)) }
 
 
-  # rule(:bloque)       { instSi.as(:bloqueSi)    | expresionF.as(:expre)}# |  ( instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
+  # rule(:bloque)       { llamFunc }# |  ( instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
 # DESCOMENTAR
-  rule(:bloque)       { expresionF.as(:bloqueExpresion) | declaracion.as(:bloqueDeclaracion) |  instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
-    instPara.as(:para) }
+  rule(:bloque)       { llamFunc.as(:llamadafuncion)  | expresionF.as(:bloqueExpresion) | declaracion.as(:bloqueDeclaracion) |  instFunc.as(:bloqueFuncion) |  instSi.as(:bloqueSi)  | instClase.as(:clase) | instDo.as(:inst_Do)  | instWhile.as(:cicloWhile) | instImport.as(:importar)  |
+    instPara.as(:para)   }
 
   #main
   rule(:bloques)      { bloque.as(:wat)  >>  bloques.maybe.as(:fuck) }
