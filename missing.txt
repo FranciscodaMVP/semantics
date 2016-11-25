@@ -1,0 +1,27 @@
+missing
+
+finalizar funcion
+
+comprobar los tipos dentro de expresion
+
+agregar simbolos de funcion
+
+simbolo llamada a funcion
+
+comprobar parametros
+
+Imprimir errores
+
+-- config
+
+ui theme = one light
+syntax theme = one light
+
+"*":
+  core:
+    themes: [
+      "one-light-ui"
+      "one-light-syntax"
+    ]
+  "exception-reporting":
+    userId: "c205b81e-a0fd-f995-e80d-faac96037f6b"

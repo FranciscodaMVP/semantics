@@ -15,7 +15,6 @@ class Semantics
     @ob_exp = Hash.new
     @contador_exp = 0
   end
-
   # RECORRER ARBOL
   def recorrer_arbol(arbol)
       arbol.each do |key, value|
@@ -61,9 +60,22 @@ class Semantics
       @log += "\n----------------FIN EXPRESION-----------------"
       @padre = @old_padre
     end
+
+    if llave == :bloqueFuncion
+      @log += "\n----------------FUNCION-----------------"
+      @log << "\nllave\n"
+      @log << llave.to_s
+      @log << "\nvalor \n"
+      @log << valor.to_s
+      @log += "\n----------------FIN FUNCION-----------------"
+    end
   end
 
 # Creacion de simbolos
+  def funcion(bloque)
+
+  end
+
 	def simb_declaracion(bloque)
 	  nombre = bloque.keys.join
 	  tipo = bloque.values.join
@@ -92,10 +104,7 @@ class Semantics
       end
       a = {:nombre => nombre, :padre=> @padre, :id => id, :tipo => tipo}
       # agregar tipo a los datos
-
       @bloque_actual[@bloques] = a
-      # $tablas_simbolos[@bloques]=a
-      # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
     else
       tipo = bloque[:izq]
@@ -105,8 +114,6 @@ class Semantics
       # gurdar tipos
       a = {:nombre => nombre, :padre => @padre, :tipo => tipo}
       @bloque_actual[@bloques] = a
-      # $tablas_simbolos[@bloques]=a
-      # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
     end
 
@@ -135,7 +142,6 @@ class Semantics
         # agregar tipo a los datos
         $tablas_simbolos[@bloques]=a
         @bloque_actual[@bloques] = a
-        # @bloque_actual = $tablas_simbolos[@bloques]
         @bloques +=1
       # LADO DERECHO TIPO DATO
       else
@@ -148,8 +154,7 @@ class Semantics
       tipo = bloque[:der]
       a = {:nombre => nombre, :padre => @padre, :tipo => tipo}
       @bloque_actual[@bloques] = a
-      # $tablas_simbolos[@bloques]=a
-      # @bloque_actual = $tablas_simbolos[@bloques]
+
       @bloques +=1
     end
   end

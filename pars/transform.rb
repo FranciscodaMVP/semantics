@@ -25,16 +25,6 @@ class CodeDeclara < Parslet::Transform
   rule( :clase     =>  simple(:clase),
         :id  =>  subtree(:clasid)) do { clase.to_s => clasid}end# bloque_actual[id.to_s]=valor end#; }end
 
-#partes del TIPO DATO
-  # CON ESTO FUNCA
-  # rule( :entero    =>  simple(:t)) {t}
-  # rule( :flotante =>  simple(:y))  {y}
-  # rule( :cadena =>  simple(:y))  {y}
-
-  # rule( :der    =>  simple(:der)
-  #       :entero =>  subtree(:p)) { der => p }
-
-
   rule( :id     =>  simple(:d)) {d.to_s}
 
   rule( :id     =>  simple(:id),

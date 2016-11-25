@@ -45,7 +45,7 @@ class Semantics
       clase = "expresion"
       padre = @padre
 
-      a = {:nombre => nombre, :clase => clase, :padre => padre}
+      a = {:nombre => @bloques, :id => nombre, :clase => clase, :padre => padre}
       $tablas_simbolos[@bloques]=a
       @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
@@ -69,11 +69,13 @@ class Semantics
 	  tipo = bloque.values.join
 	  numero = @bloques
 	  a = {:tipo => tipo, :clase => "declaracion", :padre => @padre, :nombre => nombre, :numero => numero}
-	  @bloque_actual[nombre]= a
+    @bloque_actual[nombre]= a
       @bloques +=1
 	end
 
   def simb_expresion(bloque)
+    @log << "\nbloque actual\n"
+    @log <<   @bloque_actual.to_s
     @contador_exp += 1
     nombre = 'param'+@contador_exp.to_s
     if bloque[:izq].is_a?(Hash)
@@ -81,10 +83,19 @@ class Semantics
       @log << "\nid - variable\n"
       @log << id.to_s
 
-      # guardar ids en tabla de simbolos
-      a = {:nombre => nombre, :padre=> @padre, :id => id}
-      $tablas_simbolos[@bloques]=a
-      @bloque_actual = $tablas_simbolos[@bloques]
+      # agregar tipo a los datos
+      res = fetching(id)
+      case res
+      when 'NOPE'
+        tipo='no existe'
+      else tipo = res
+      end
+      a = {:nombre => nombre, :padre=> @padre, :id => id, :tipo => tipo}
+      # agregar tipo a los datos
+
+      @bloque_actual[@bloques] = a
+      # $tablas_simbolos[@bloques]=a
+      # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
     else
       tipo = bloque[:izq]
@@ -93,8 +104,9 @@ class Semantics
 
       # gurdar tipos
       a = {:nombre => nombre, :padre => @padre, :tipo => tipo}
-      $tablas_simbolos[@bloques]=a
-      @bloque_actual = $tablas_simbolos[@bloques]
+      @bloque_actual[@bloques] = a
+      # $tablas_simbolos[@bloques]=a
+      # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
     end
 
@@ -111,9 +123,19 @@ class Semantics
         @log << "entramos al identi"
         @log << a.to_s
         id = a[:identi]
-        a = {:nombre => nombre, :padre=> @padre, :id => id}
+        res = fetching(id)
+
+        # agregar tipo a los datos
+        case res
+        when 'NOPE'
+          tipo='no existe'
+        else tipo = res
+        end
+        a = {:nombre => nombre, :padre=> @padre, :id => id, :tipo => tipo}
+        # agregar tipo a los datos
         $tablas_simbolos[@bloques]=a
-        @bloque_actual = $tablas_simbolos[@bloques]
+        @bloque_actual[@bloques] = a
+        # @bloque_actual = $tablas_simbolos[@bloques]
         @bloques +=1
       # LADO DERECHO TIPO DATO
       else
@@ -125,9 +147,24 @@ class Semantics
       @log << bloque[:der].to_s
       tipo = bloque[:der]
       a = {:nombre => nombre, :padre => @padre, :tipo => tipo}
-      $tablas_simbolos[@bloques]=a
-      @bloque_actual = $tablas_simbolos[@bloques]
+      @bloque_actual[@bloques] = a
+      # $tablas_simbolos[@bloques]=a
+      # @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
+    end
+  end
+
+  def fetching(buscar)
+    if $tablas_simbolos['main'].key?(buscar)
+      fetch = $tablas_simbolos['main'].fetch(buscar)
+      @log << "\n\nFETCHING DE LA TABLA DE SIMBOLOS"
+      @log << fetch[:tipo]
+      @log << "\n\nFETCHING DE LA TABLA DE SIMBOLOS"
+      return fetch[:tipo]
+    else
+      @log << "\n\n"+buscar.to_s
+      @log << "\n\nNOPENOPENOPE\n\n"
+      return 'NOPE'
     end
   end
 
