@@ -13,7 +13,10 @@ class Semantics
     @lista_errores = Hash.new
     @log = String.new
     @ob_exp = Hash.new
+    @funcion = 0
+    @llamafuncion = 0
     @contador_exp = 0
+
   end
   # RECORRER ARBOL
   def recorrer_arbol(arbol)
@@ -62,17 +65,92 @@ class Semantics
     end
 
     if llave == :bloqueFuncion
+      #log
       @log += "\n----------------FUNCION-----------------"
       @log << "\nllave\n"
       @log << llave.to_s
       @log << "\nvalor \n"
       @log << valor.to_s
       @log += "\n----------------FIN FUNCION-----------------"
+      @log += "\n"+@funcion.to_s
+      #crear simbolo
+      @funcion = 0
+      nombre = valor[:funcId]
+      clase = "funcion"
+      funcion(valor)
+      padre = @padre
+      num_datos = @funcion
+
+       a = {:nombre => @bloques, :id => nombre, :clase => clase, :padre => padre, :datos =>num_datos }
+      #  $tablas_simbolos[@bloques]=a
+       $tablas_simbolos[nombre]=a
+       @bloque_actual = $tablas_simbolos[@bloques]
+       @bloques +=1
+    end
+
+    if llave == :llamadafuncion
+      @log += "\n----------------LLAMADA FUNCION-----------------"
+      @log << "\nllave\n"
+      @log << llave.to_s
+      @log << "\nvalor \n"
+      @log << valor.to_s
+      funcion_llamada(valor)
+      @llamafuncion += 1
+      @log += "\n----------------LLAMADA FIN FUNCION-----------------"
+      @log += "\n"+@llamafuncion.to_s
+
+      #crear simbolo
+      nombre = valor[:identificador]
+      clase = "llamada"
+      padre = @padre
+      num_datos = @llamafuncion
+
+       a = {:nombre => @bloques, :id => nombre, :clase => clase, :padre => padre, :datos =>num_datos }
+      #  $tablas_simbolos[@bloques]=a
+       $tablas_simbolos[@bloques]=a
+       @bloque_actual = $tablas_simbolos[@bloques]
+       @bloques +=1
+
+      @llamafuncion = 0
     end
   end
 
 # Creacion de simbolos
+  def funcion_llamada(bloque)
+    if bloque[:paramF]
+      if bloque[:paramsF]
+        t = bloque[:paramsF]
+        @log += "\n----------------IMPRIME PARAMS DE LA LLAMADA-----------------\n"
+        @log << bloque[:paramsF].to_s
+        funcion_llamada(t)
+        @llamafuncion += 1
+      end
+    elsif bloque[:paramsF]
+      @log += "\n----------------IMPRIME PARAMS DE LA LLAMADA-----------------\n"
+      @log << bloque[:paramsF].to_s
+      t = bloque[:paramsF]
+      @llamafuncion += 1
+      funcion_llamada(t)
+
+
+    end
+  end
+
   def funcion(bloque)
+    if bloque[:parametros]
+      @funcion += 1
+      t = bloque[:parametros][:parame]
+      @log += "\n----------------IMPRIME PARAMS-----------------\n"
+      @log << bloque[:parametros][:parame].to_s
+      funcion(t)
+      @funcion += 1
+    elsif bloque[:parame]
+      @log += "\n----------------IMPRIME PARAMS-----------------\n"
+      @log << bloque[:parame].to_s
+      t = bloque[:parame]
+      @funcion += 1
+      funcion(t)
+    end
 
   end
 

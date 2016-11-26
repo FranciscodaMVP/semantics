@@ -18,7 +18,7 @@ trans = Trans.new
 
 debugger = false
 parssing = false
-transformado = true
+transformado = false
 semantico = true
 semantico_errores = false
 simbolos = true
@@ -85,7 +85,7 @@ if semantico
     if semantico_errores
 		sem.errores
 	end
-  
+
 else
   sem.recorrer_arbol(final)
   if semantico_errores
@@ -107,8 +107,8 @@ end
 #   code.imp_has
 # end
   #opciones
-  
-# transformacion para modificar declaraciones   
+
+# transformacion para modificar declaraciones
 declara = CodeDeclara.new
 if declarar
   pp dec = declara.apply(parseo)
@@ -135,7 +135,7 @@ if coder
     pp 'nuevo'
     code.imp_has
   end
-  
+
   # imprime cuadruplas
   if cuadruplas
     pp 'cuadruplas'

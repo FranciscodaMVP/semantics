@@ -4,9 +4,16 @@ t = "casa"
 M = 3.4
 f = 4
 
-M := t + 44
+M := f + 44
 
-car := M * t /6
+car := M * t
+
+funky suma (a entero, b entero):
+resultado := a + b
+return resultado
+}
+
+  auto := suma (23, tr)}
 
   if n == 15:
   then
@@ -16,13 +23,6 @@ car := M * t /6
     t := M + 1
 
   }
-
-  funky suma (a entero, b entero, c entero):
-  resultado := a + b
-  return resultado
-}
-
-  auto := suma (23, tr, 46)}
 
   while n >= 10:
     k := M + 2

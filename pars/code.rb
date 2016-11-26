@@ -6,6 +6,7 @@ class Code
     @temps = 0
     @temps_label = 1
     @datos_hash = String.new
+    @params = Array.new
     # @lista_exp = Hash.new
   end
 
@@ -44,6 +45,22 @@ class Code
       checa_funcion(valor)
     end
 
+    if llave == :llamadafuncion
+      id = valor[:identificador]
+      funcion =valor[:funcion]
+      aux = genera_aux
+      etiqueta = aux+' = CALL _'+funcion
+      genera_inter('etiqueta',etiqueta, nil, nil)
+
+      @params.each do |pa|
+        genera_inter('PUSH', pa, '--', '--')
+      end
+
+      etiqueta2 = id+' = '+aux
+      genera_inter('etiqueta', etiqueta2, '--', '--')
+
+    end
+
     #label para terminar el bloque si que tiene else
     # RECORDATORIO INTENTAR IMPLEMENTAR VERSIONES DISTINTAS DE SI y SI ELSE
     if llave == :finBloqueSI
@@ -68,7 +85,7 @@ class Code
   end
 
   def checa_funcion(bloque)
-
+    @params.clear
 # CABEZA DE LA FUNCION
     @datos_hash << "\n FUNCION \n"
     @datos_hash << "\n"+ bloque.to_s
@@ -85,13 +102,17 @@ class Code
 # salida o retorno de params
   # CALL X
   # POP TALGO
+  @datos_hash << "\n PARAMETROS \n"
+  @datos_hash << "\n"+ @params.to_s
+  @datos_hash << "\n FIN PARAMETROS \n"
 
   # BEGIN FUNCTION
   etiqueta = 'BEGIN_FUNCTION'
   genera_inter('etiqueta',etiqueta, nil, nil)
   # Cuerpo de la funcion
 
-  # END FUNCTION
+  # etiqueta = 'END_FUNCTION'
+  # genera_inter('etiqueta',etiqueta, nil, nil)
   end
 
   def params (bloque)
@@ -105,9 +126,9 @@ class Code
     # declaracion
     aux = genera_aux
     genera_inter('declaracionparam', id, aux, '--')
-
+    @params << id
     # PUSH de la var
-    genera_inter('PUSH', aux, '--', '--')
+    genera_inter('POP', aux, '--', '--')
 
     if bloque[:parame]
       params(bloque[:parame])
@@ -268,6 +289,8 @@ class Code
       b = ["declaracionparam", izq, der, aux]
     when instruccion == 'PUSH'
       b = ["PUSH", izq, '--', '--']
+    when instruccion == 'POP'
+      b = ["POP", izq, '--', '--']
 	else
 	  b = [instruccion, izq, der, 'NOSE']
 

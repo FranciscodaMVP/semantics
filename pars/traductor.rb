@@ -66,6 +66,8 @@ class Traductor
     when "PUSH"
       @final <<  " PUSH " + algo[1] +"\n"
       # @final <<  "  " + tipo_dato(algo[2]) + " = " + algo[1] + "\n"
+    when "POP"
+      @final <<  " POP " + algo[1] +"\n"
     end
   end
 
