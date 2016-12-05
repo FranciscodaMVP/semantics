@@ -19,14 +19,14 @@ trans = Trans.new
 debugger = false
 parssing = false
 transformado = false
-semantico = true
+semantico = false
 semantico_errores = false
-simbolos = true
+simbolos = false
 declarar = false
 transFormer = false
-coder = false
+coder = true
 coder_debugger = false
-cuadruplas = false
+cuadruplas = true
 
  # debug
 if debugger
