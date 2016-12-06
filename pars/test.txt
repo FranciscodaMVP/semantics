@@ -1,0 +1,141 @@
+--------- CODIGO ---------
+  t3 = f + 44
+  M = t3
+  t3 = M * t
+  car = t3
+_suma
+  t3 = a
+ POP t3
+  t4 = b
+ POP t4
+BEGIN_FUNCTION
+  t5 = a + b
+  resultado = t5
+END_FUNCTION
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  t7 = t + 1
+  t = t7
+ GOTO Label2
+Label1
+  t7 = t + 1
+  t = t7
+  t7 = M + 1
+  t = t7
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+Label3
+  t8 = M + 2
+  k = t8
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  t9 = t + 1
+  t = t9
+Label5
+  t9 = t + 1
+  t = t9
+Label6
+--------- CODIGO ---------
+  t3 = f + 44
+  M = t3
+  t3 = M * t
+  car = t3
+_suma
+  t3 = a
+ POP t3
+  t4 = b
+ POP t4
+BEGIN_FUNCTION
+  t5 = a + b
+  resultado = t5
+END_FUNCTION
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  t7 = t + 1
+  t = t7
+ GOTO Label2
+Label1
+  t7 = t + 1
+  t = t7
+  t7 = M + 1
+  t = t7
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+Label3
+  t8 = M + 2
+  k = t8
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  t9 = t + 1
+  t = t9
+Label5
+  t9 = t + 1
+  t = t9
+Label6
+--------- CODIGO ---------
+  t3 = f + 44
+  M = t3
+  t3 = M * t
+  car = t3
+_suma
+  t3 = a
+ POP t3
+  t4 = b
+ POP t4
+BEGIN_FUNCTION
+  t5 = a + b
+  resultado = t5
+END_FUNCTION
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  t7 = t + 1
+  t = t7
+ GOTO Label2
+Label1
+  t7 = t + 1
+  t = t7
+  t7 = M + 1
+  t = t7
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+Label3
+  t8 = M + 2
+  k = t8
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  t9 = t + 1
+  t = t9
+Label5
+  t9 = t + 1
+  t = t9
+Label6

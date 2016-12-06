@@ -74,6 +74,8 @@ class Traductor
   def imprime
     puts @declarado
     puts @final
+    File.open("test.txt", 'a') { |file| file.write(@final) }
+    
   end
 
 end
