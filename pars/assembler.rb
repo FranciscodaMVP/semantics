@@ -7,12 +7,17 @@ class Assembler
   end
 
   def traducir
-    @declarado <<  "--------- VARS ---------" + "\n"
-    @final <<  "--------- CODIGO ---------" + "\n"
+    @declarado <<  ".data" + "\n"
+    @final <<  ".code" + "\n"
+    @final <<  "MAIN:" + "\n"
+
     @traduccion.each do |ob|
       # pp ob[0]
       evaluar(ob)
     end
+    @final <<  "CODE ENDS" + "\n"
+    @final <<  "END MAIN" + "\n"
+
   end
 
   def tipo_dato(tipo)

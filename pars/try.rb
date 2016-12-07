@@ -3,6 +3,7 @@ require_relative 'semantics'
 require_relative 'transform'
 require_relative 'code'
 require_relative 'traductor'
+require_relative 'assembler'
 
 require 'pp'
 
@@ -27,6 +28,7 @@ transFormer = false
 coder = true
 coder_debugger = false
 cuadruplas = true
+assembler = true
 
  # debug
 if debugger
@@ -141,10 +143,13 @@ if coder
     pp 'cuadruplas'
     code.imp_cuad
   end
-
   # convierte las cuadruplas en codigo intermedio
   t = code.get_code
   traduccion = Traductor.new(t)
   traduccion.traducir
   traduccion.imprime
+
+  assembly = Assembler.new(t)
+  assembly.traducir
+  assembly.imprime
 end
