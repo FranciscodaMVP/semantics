@@ -12,7 +12,7 @@ parser = MyOwn.new
 trans = Trans.new
 
  cadena =''
- File.open("code.txt", "r") do |t|
+ File.open("code2.txt", "r") do |t|
    t.each_line do |line|
      cadena += line
    end
@@ -84,7 +84,7 @@ if semantico
   sem.recorrer_arbol(final)
   sem.revisar
   # sem.imprime_log
-  # sem.imprime_simbolos
+  sem.imprime_simbolos
   # puts '------------------------------------------------------------------
   # fin recorrido
   # ------------------------------------------------------------------'

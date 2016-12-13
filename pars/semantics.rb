@@ -266,9 +266,21 @@ class Semantics
     puts 'funcion revisar'
     $tablas_simbolos.each do |key, value|
       if value.key?(:clase)
+        ary = Array.new
         # puts "llaves \n" + key.to_s
-        puts "valor \n" + value.to_s
-        # puts "expre \n"+value[:clase]
+        # puts "valor \n" + value.to_s
+        puts "datos de la expresion \n"
+        value.each do |key, value|
+            if value.is_a?(Hash)
+              if value.key?(:nombre)
+                # puts "\n\n"
+                # puts value[:tipo]
+                ary << value[:tipo]
+              end
+            end
+        end
+        puts ary.to_s
+        puts "fin de la expresion"
       end
     end
   end
