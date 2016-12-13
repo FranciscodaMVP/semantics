@@ -260,7 +260,19 @@ class Semantics
       puts @log
   end
 
+# REVISAR EL ARBOL DE FUNCIONES
+# CREAR UN CASO DE USO PARA CADA TIPO
   def revisar
-
+    puts 'funcion revisar'
+    $tablas_simbolos.each do |key, value|
+      if value.key?(:clase)
+        # puts "llaves \n" + key.to_s
+        puts "valor \n" + value.to_s
+        # puts "expre \n"+value[:clase]
+      end
+    end
   end
+
+
+
 end

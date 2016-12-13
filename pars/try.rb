@@ -12,7 +12,7 @@ parser = MyOwn.new
 trans = Trans.new
 
  cadena =''
- File.open("code2.txt", "r") do |t|
+ File.open("code.txt", "r") do |t|
    t.each_line do |line|
      cadena += line
    end
@@ -78,23 +78,23 @@ end
 sem = Semantics.new(final)
 # error = Semans.new(final)
 if semantico
-  puts '------------------------------------------------------------------
-  arbol- recorrido
-  ------------------------------------------------------------------'
+  # puts '------------------------------------------------------------------
+  # arbol- recorrido
+  # ------------------------------------------------------------------'
   sem.recorrer_arbol(final)
+  sem.revisar
   # sem.imprime_log
-  sem.imprime_simbolos
-  puts '------------------------------------------------------------------
-  fin recorrido
-  ------------------------------------------------------------------'
+  # sem.imprime_simbolos
+  # puts '------------------------------------------------------------------
+  # fin recorrido
+  # ------------------------------------------------------------------'
     if semantico_errores
 		sem.errores
 	end
 
-
-
 else
   sem.recorrer_arbol(final)
+  sem.revisar
   if semantico_errores
 	sem.errores
   end
@@ -105,7 +105,7 @@ if simbolos
    puts '------------------------------------------------------------------
    Tabla de Simbolos :
    ------------------------------------------------------------------'
-    pp $tablas_simbolos
+    sem.imprime_simbolos
 end
 
 # if coder
