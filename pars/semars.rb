@@ -1,6 +1,6 @@
 
 #Objeto
-class Semantics
+class Semans
   attr_accessor :lista
   def initialize (lista)
     @lista=lista
@@ -33,12 +33,12 @@ class Semantics
 # revisa bloques
   def evalua_llave(llave, valor)
   	if llave == :bloqueDeclaracion
-		@log += "\n----------------DECLARACION-----------------"
-        @log << "\nllave\n"
-		@log << llave.to_s
-		@log << "\nvalor \n"
-		@log << valor.to_s
-		@log += "\n----------------FIN DECLARACION-----------------"
+		# @log += "\n----------------DECLARACION-----------------"
+        # @log << "\nllave\n"
+		# @log << llave.to_s
+		# @log << "\nvalor \n"
+		# @log << valor.to_s
+		# @log += "\n----------------FIN DECLARACION-----------------"
 		simb_declaracion(valor)
   	end
 
@@ -52,15 +52,15 @@ class Semantics
       @bloque_actual = $tablas_simbolos[@bloques]
       @bloques +=1
 
-      # @log += "\n----------------EXPRESION-----------------"
-      # @log << "\nllave\n"
-      # @log << llave.to_s
-      # @log << "\nvalor \n"
-      # @log << valor.to_s
+      @log += "\n----------------EXPRESION-----------------"
+      @log << "\nllave\n"
+      @log << llave.to_s
+      @log << "\nvalor \n"
+      @log << valor.to_s
       @old_padre = padre
       @padre = @bloque_actual[:nombre]
       simb_expresion(valor)
-      # @log += "\n----------------FIN EXPRESION-----------------"
+      @log += "\n----------------FIN EXPRESION-----------------"
       @padre = @old_padre
     end
 
@@ -126,8 +126,8 @@ class Semantics
         @llamafuncion += 1
       end
     elsif bloque[:paramsF]
-      # @log += "\n----------------IMPRIME PARAMS DE LA LLAMADA-----------------\n"
-      # @log << bloque[:paramsF].to_s
+      @log += "\n----------------IMPRIME PARAMS DE LA LLAMADA-----------------\n"
+      @log << bloque[:paramsF].to_s
       t = bloque[:paramsF]
       @llamafuncion += 1
       funcion_llamada(t)
@@ -140,13 +140,13 @@ class Semantics
     if bloque[:parametros]
       @funcion += 1
       t = bloque[:parametros][:parame]
-      # @log += "\n----------------IMPRIME PARAMS-----------------\n"
-      # @log << bloque[:parametros][:parame].to_s
+      @log += "\n----------------IMPRIME PARAMS-----------------\n"
+      @log << bloque[:parametros][:parame].to_s
       funcion(t)
       @funcion += 1
     elsif bloque[:parame]
-      # @log += "\n----------------IMPRIME PARAMS-----------------\n"
-      # @log << bloque[:parame].to_s
+      @log += "\n----------------IMPRIME PARAMS-----------------\n"
+      @log << bloque[:parame].to_s
       t = bloque[:parame]
       @funcion += 1
       funcion(t)
@@ -164,14 +164,14 @@ class Semantics
 	end
 
   def simb_expresion(bloque)
-    # @log << "\nbloque actual\n"
-    # @log <<   @bloque_actual.to_s
+    @log << "\nbloque actual\n"
+    @log <<   @bloque_actual.to_s
     @contador_exp += 1
     nombre = 'param'+@contador_exp.to_s
     if bloque[:izq].is_a?(Hash)
       id = bloque[:izq][:identi]
-      # @log << "\nid - variable\n"
-      # @log << id.to_s
+      @log << "\nid - variable\n"
+      @log << id.to_s
 
       # agregar tipo a los datos
       res = fetching(id)
@@ -186,8 +186,8 @@ class Semantics
       @bloques +=1
     else
       tipo = bloque[:izq]
-      # @log << "\ntipo del objeto\n"
-      # @log << tipo.to_s
+      @log << "\ntipo del objeto\n"
+      @log << tipo.to_s
 
       # gurdar tipos
       a = {:nombre => nombre, :padre => @padre, :tipo => tipo}
@@ -195,17 +195,17 @@ class Semantics
       @bloques +=1
     end
 
-    # @log << "\nid\n"
-    # @log << nombre.to_s
-    # @log << "\nllaves\n"
-    # @log << bloque.keys.to_s
+    @log << "\nid\n"
+    @log << nombre.to_s
+    @log << "\nllaves\n"
+    @log << bloque.keys.to_s
 
     # RECURSIVIDAD
     if bloque[:der].is_a?(Hash)
       a = bloque[:der]
       # LADO DERECHO VAR
       if a[:identi]
-        @log << "entramos al identi\n"
+        @log << "entramos al identi"
         @log << a.to_s
         id = a[:identi]
         res = fetching(id)
@@ -228,7 +228,7 @@ class Semantics
       end
     else
       # @log << "\nNo SE LLEGAR AQUI\n"
-      @log << bloque[:der].to_s
+      # @log << bloque[:der].to_s
       tipo = bloque[:der]
       a = {:nombre => nombre, :padre => @padre, :tipo => tipo}
       @bloque_actual[@bloques] = a
@@ -242,25 +242,18 @@ class Semantics
       fetch = $tablas_simbolos['main'].fetch(buscar)
       @log << "\n\nFETCHING DE LA TABLA DE SIMBOLOS\n"
       @log << fetch[:tipo]
+      @log << "Se detecto un error "
       @log << "\n\nFETCHING DE LA TABLA DE SIMBOLOS\n"
       return fetch[:tipo]
     else
-      @log << "\n\n"+buscar.to_s+" no se encontro"
-      # @log << "\n\nNo se encontro\n\n" #+$tablas_simbolos['main'].key.to_s
+      @log << "\n\n"+buscar.to_s
+      @log << "\n\nNo se encontro\n\n" #+$tablas_simbolos['main'].key.to_s
       return 'NOPE'
     end
-  end
-
-  def imprime_simbolos
-    puts 'tabla de simbolos'
-    pp $tablas_simbolos
   end
 
   def imprime_log
       puts @log
   end
 
-  def revisar
-
-  end
 end

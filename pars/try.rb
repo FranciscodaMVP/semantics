@@ -4,6 +4,7 @@ require_relative 'transform'
 require_relative 'code'
 require_relative 'traductor'
 require_relative 'assembler'
+# require_relative 'semars'
 
 require 'pp'
 
@@ -11,7 +12,7 @@ parser = MyOwn.new
 trans = Trans.new
 
  cadena =''
- File.open("code.txt", "r") do |t|
+ File.open("code2.txt", "r") do |t|
    t.each_line do |line|
      cadena += line
    end
@@ -20,15 +21,15 @@ trans = Trans.new
 debugger = false
 parssing = false
 transformado = false
-semantico = false
+semantico = true
 semantico_errores = false
 simbolos = false
 declarar = false
 transFormer = false
-coder = true
+coder = false
 coder_debugger = false
-cuadruplas = true
-assembler = true
+cuadruplas = false
+assembler = false
 
  # debug
 if debugger
@@ -75,18 +76,22 @@ end
 
 # analisis semantico
 sem = Semantics.new(final)
+# error = Semans.new(final)
 if semantico
   puts '------------------------------------------------------------------
   arbol- recorrido
   ------------------------------------------------------------------'
   sem.recorrer_arbol(final)
-  sem.imprime_log
+  # sem.imprime_log
+  sem.imprime_simbolos
   puts '------------------------------------------------------------------
   fin recorrido
   ------------------------------------------------------------------'
     if semantico_errores
 		sem.errores
 	end
+
+
 
 else
   sem.recorrer_arbol(final)
@@ -147,7 +152,7 @@ if coder
   t = code.get_code
   traduccion = Traductor.new(t)
   traduccion.traducir
-  traduccion.imprime
+  #traduccion.imprime
 
   assembly = Assembler.new(t)
   assembly.traducir

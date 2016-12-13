@@ -7,16 +7,16 @@ class Assembler
   end
 
   def traducir
-    @declarado <<  ".data" + "\n"
-    @final <<  ".code" + "\n"
-    @final <<  "MAIN:" + "\n"
+    @declarado <<  "\n.data\n"
+    @final <<  "\n.code\n"
+    @final <<  "\nMAIN: \n"
 
     @traduccion.each do |ob|
       # pp ob[0]
       evaluar(ob)
     end
-    @final <<  "CODE ENDS" + "\n"
-    @final <<  "END MAIN" + "\n"
+    @final <<  "\nCODE ENDS\n"
+    @final <<  "\nEND MAIN\n"
 
   end
 
@@ -35,9 +35,14 @@ class Assembler
     # pp algo[0]
     case algo[0]
     when "suma"
-      @final <<  "  " + algo[1] + " = " + algo[2] + " + "+ algo[3]+ "\n"
+      # @final <<  "\nsuma\n"
+      @final <<  "  LDA " + algo[3]+"\n"
+      @final <<  "  ADC " + algo[2]+"\n"
+      @final <<  "  MOV " + algo[1] +", "+"LDA\n"
+      # @final <<  "  " + algo[1] + " = " + algo[2] + " + "+ algo[3]+ "\n"
     when "asign"
-      @final <<  "  " + algo[1] + " = " + algo[2] + "\n"
+      # @final <<  "  " + algo[1] + " = " + algo[2] + "\n"
+      @final <<  "  MOV " + algo[1] +", "+ algo[2] +"\n"
     when "mayor"
       @final <<  "  cmp " +  algo[2] + ", " + algo[3] + "\n"
       @final <<  "  SETG " + algo[1] + "\n"
@@ -58,15 +63,20 @@ class Assembler
     when "si"
       @final <<  'if ' + algo[1] + " GOTO " + algo[2] + "\n"
     when "multi"
-      @final <<  "  " + algo[1] + " = " + algo[2] + " * "+ algo[3]+ "\n"
+      # @final <<  "\multi\n"
+      @final <<  "  LDA " + algo[3]+"\n"
+      @final <<  "  MUL " + algo[2]+"\n"
+      @final <<  "  MOV " + algo[1]+", LDA\n"
+      # @final <<  "  " + algo[1] + " = " + algo[2] + " * "+ algo[3]+ "\n"
     when "GOTO"
       @final << " GOTO " + algo[1] + "\n"
     when "ETI"
-      @final <<  algo[1] + "\n"
+      @final <<  "\n" + algo[1] + "\n"
     when "DECLARA"
       @declarado <<  "  " + algo[1] + " = " + algo[3] + " - " +tipo_dato(algo[2])+"\n"
     when "declaracionparam"
-      @final <<  "  " + algo[2] + " = " + algo[1] +"\n"
+      @final <<  "  MOV " + algo[2] +", "+ algo[1] +"\n"
+      # @final <<  "  " + algo[2] + " = " + algo[1] +"\n"
 #PUSH y COSAS DE ENSAMBLADOR
     when "PUSH"
       @final <<  " PUSH " + algo[1] +"\n"
@@ -79,8 +89,8 @@ class Assembler
   def imprime
     puts @declarado
     puts @final
-    File.open("test.txt", 'a') { |file| file.write(@final) }
-    
+    File.open("test.txt", 'a') { |file| file.write(@declarado + @final) }
+
   end
 
 end

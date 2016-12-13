@@ -1,141 +1,880 @@
---------- CODIGO ---------
-  t3 = f + 44
-  M = t3
-  t3 = M * t
-  car = t3
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN:
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
 _suma
-  t3 = a
+  MOV t3, a
  POP t3
-  t4 = b
+  MOV t4, b
  POP t4
+
 BEGIN_FUNCTION
-  t5 = a + b
-  resultado = t5
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
 END_FUNCTION
+
 t5 = CALL _suma
  PUSH a
  PUSH b
+
 auto = t5
   cmp n, 15
   SETE t6
 if_falso t6 GOTO Label1
-  t7 = t + 1
-  t = t7
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
  GOTO Label2
+
 Label1
-  t7 = t + 1
-  t = t7
-  t7 = M + 1
-  t = t7
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
 Label2
   cmp n, 10
   SETGE t7
 if t7 GOTO Label3
  GOTO Label4
+
 Label3
-  t8 = M + 2
-  k = t8
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
 Label4
   cmp t, 5
   SETG t8
 if_falso t8 GOTO Label5
-  t9 = t + 1
-  t = t9
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
 Label5
-  t9 = t + 1
-  t = t9
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
 Label6
---------- CODIGO ---------
-  t3 = f + 44
-  M = t3
-  t3 = M * t
-  car = t3
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
 _suma
-  t3 = a
+  MOV t3, a
  POP t3
-  t4 = b
+  MOV t4, b
  POP t4
+
 BEGIN_FUNCTION
-  t5 = a + b
-  resultado = t5
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
 END_FUNCTION
+
 t5 = CALL _suma
  PUSH a
  PUSH b
+
 auto = t5
   cmp n, 15
   SETE t6
 if_falso t6 GOTO Label1
-  t7 = t + 1
-  t = t7
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
  GOTO Label2
+
 Label1
-  t7 = t + 1
-  t = t7
-  t7 = M + 1
-  t = t7
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
 Label2
   cmp n, 10
   SETGE t7
 if t7 GOTO Label3
  GOTO Label4
+
 Label3
-  t8 = M + 2
-  k = t8
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
 Label4
   cmp t, 5
   SETG t8
 if_falso t8 GOTO Label5
-  t9 = t + 1
-  t = t9
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
 Label5
-  t9 = t + 1
-  t = t9
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
 Label6
---------- CODIGO ---------
-  t3 = f + 44
-  M = t3
-  t3 = M * t
-  car = t3
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
 _suma
-  t3 = a
+  MOV t3, a
  POP t3
-  t4 = b
+  MOV t4, b
  POP t4
+
 BEGIN_FUNCTION
-  t5 = a + b
-  resultado = t5
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
 END_FUNCTION
+
 t5 = CALL _suma
  PUSH a
  PUSH b
+
 auto = t5
   cmp n, 15
   SETE t6
 if_falso t6 GOTO Label1
-  t7 = t + 1
-  t = t7
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
  GOTO Label2
+
 Label1
-  t7 = t + 1
-  t = t7
-  t7 = M + 1
-  t = t7
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
 Label2
   cmp n, 10
   SETGE t7
 if t7 GOTO Label3
  GOTO Label4
+
 Label3
-  t8 = M + 2
-  k = t8
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
 Label4
   cmp t, 5
   SETG t8
 if_falso t8 GOTO Label5
-  t9 = t + 1
-  t = t9
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
 Label5
-  t9 = t + 1
-  t = t9
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
 Label6
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
+_suma
+  MOV t3, a
+ POP t3
+  MOV t4, b
+ POP t4
+
+BEGIN_FUNCTION
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
+END_FUNCTION
+
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+ GOTO Label2
+
+Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+
+Label3
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label6
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
+_suma
+  MOV t3, a
+ POP t3
+  MOV t4, b
+ POP t4
+
+BEGIN_FUNCTION
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
+END_FUNCTION
+
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+ GOTO Label2
+
+Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+
+Label3
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label6
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
+_suma
+  MOV t3, a
+ POP t3
+  MOV t4, b
+ POP t4
+
+BEGIN_FUNCTION
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
+END_FUNCTION
+
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+ GOTO Label2
+
+Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+
+Label3
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label6
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
+_suma
+  MOV t3, a
+ POP t3
+  MOV t4, b
+ POP t4
+
+BEGIN_FUNCTION
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
+END_FUNCTION
+
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+ GOTO Label2
+
+Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+
+Label3
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label6
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
+_suma
+  MOV t3, a
+ POP t3
+  MOV t4, b
+ POP t4
+
+BEGIN_FUNCTION
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
+END_FUNCTION
+
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+ GOTO Label2
+
+Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+
+Label3
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label6
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
+_suma
+  MOV t3, a
+ POP t3
+  MOV t4, b
+ POP t4
+
+BEGIN_FUNCTION
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
+END_FUNCTION
+
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+ GOTO Label2
+
+Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+
+Label3
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label6
+
+CODE ENDS
+
+END MAIN
+
+.data
+  t = casa - cadena
+  M = 3.4 - flotante
+  f = 4 - entero
+
+.code
+
+MAIN: 
+  LDA 44
+  ADC f
+  MOV t3, LDA
+  MOV M, t3
+  LDA t
+  MUL M
+  MOV t3, LDA
+  MOV car, t3
+
+_suma
+  MOV t3, a
+ POP t3
+  MOV t4, b
+ POP t4
+
+BEGIN_FUNCTION
+  LDA b
+  ADC a
+  MOV t5, LDA
+  MOV resultado, t5
+
+END_FUNCTION
+
+t5 = CALL _suma
+ PUSH a
+ PUSH b
+
+auto = t5
+  cmp n, 15
+  SETE t6
+if_falso t6 GOTO Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+ GOTO Label2
+
+Label1
+  LDA 1
+  ADC t
+  MOV t7, LDA
+  MOV t, t7
+  LDA 1
+  ADC M
+  MOV t7, LDA
+  MOV t, t7
+
+Label2
+  cmp n, 10
+  SETGE t7
+if t7 GOTO Label3
+ GOTO Label4
+
+Label3
+  LDA 2
+  ADC M
+  MOV t8, LDA
+  MOV k, t8
+
+Label4
+  cmp t, 5
+  SETG t8
+if_falso t8 GOTO Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label5
+  LDA 1
+  ADC t
+  MOV t9, LDA
+  MOV t, t9
+
+Label6
+
+CODE ENDS
+
+END MAIN
