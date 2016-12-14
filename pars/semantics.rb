@@ -10,7 +10,7 @@ class Semantics
     $tablas_simbolos = Hash.new
     $tablas_simbolos['main']={:nombre => 'main', :padre => nil}
     @bloque_actual = $tablas_simbolos['main']
-    @lista_errores = Hash.new
+    @lista_errores = String.new
     @log = String.new
     @ob_exp = Hash.new
     @funcion = 0
@@ -263,28 +263,62 @@ class Semantics
 # REVISAR EL ARBOL DE FUNCIONES
 # CREAR UN CASO DE USO PARA CADA TIPO
   def revisar
-    puts 'funcion revisar'
+    # puts 'funcion revisar'
     $tablas_simbolos.each do |key, value|
       if value.key?(:clase)
-        ary = Array.new
-        # puts "llaves \n" + key.to_s
-        # puts "valor \n" + value.to_s
-        puts "datos de la expresion \n"
-        value.each do |key, value|
-            if value.is_a?(Hash)
-              if value.key?(:nombre)
-                # puts "\n\n"
-                # puts value[:tipo]
-                ary << value[:tipo]
-              end
-            end
+        # puts "datos de la expresion \n"
+        if value[:clase] == 'expresion'
+          revisar_expresion(value, value[:id])
         end
-        puts ary.to_s
-        puts "fin de la expresion"
+        # puts "fin de la expresion"
+
       end
     end
   end
 
+  def revisar_expresion(algo, id)
+    ary = Array.new
+    algo.each do |key, value|
+        if value.is_a?(Hash)
+          if value.key?(:nombre)
+            # puts 'cambio'
+            # puts value
+            # puts value[:tipo]
+            if value[:tipo] == 'no existe'
+              @lista_errores << "'"+value[:id]+"' no esta definido dentro del programa\n"
+              # puts "\n '"+value[:id]+"' no esta definido dentro del programa\n"
 
+            end
+            ary << value[:tipo]
+          end
+        end
+    end
+    mensaje = id
+    revisar_arreglo(ary, mensaje)
+  end
 
+  def revisar_arreglo(checks, enviar)
+    # pp checks
+    # pp checks.uniq.length
+    # puts ' el id'
+    # pp enviar
+
+    # if checks.uniq.length > 1
+    #   @lista_errores << "Error en "+ enviar+" los valores no corresponden\n"
+    # end
+
+    if checks.uniq.length == 2 && checks.uniq.include?('flotante') && checks.uniq.include?('entero')
+      @lista_errores << "Advertencia "+enviar+" contiene datos de tipo entero y flotante"
+    elsif checks.uniq.length > 1
+      @lista_errores << "Error en "+ enviar+" los valores no corresponden\n"
+    end
+  end
+
+  def errores
+    if @lista_errores.empty?
+      puts "No se detectaron errores"
+    else
+      puts @lista_errores
+    end
+  end
 end
